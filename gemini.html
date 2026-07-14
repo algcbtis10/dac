@@ -1,4 +1,4 @@
-v4.1
+v5
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,10 +9,11 @@ v4.1
         /* --- VARIABLES DE COLOR --- */
         :root {
             --blanco: #f8f8fa;
-            --negro: #1e1e1e;
-            --acento: #3a0ca3; /* El color principal para detalles */
-            --acento-aux1: #4361ee;
-            --acento-aux2: #7209b7;
+            --negro: #050505; /* Fondo más oscuro para que resalte el color */
+            --acento: #3a0ca3; 
+            --mesh-1: #4361ee;
+            --mesh-2: #7209b7;
+            --mesh-3: #12032e;
         }
 
         * {
@@ -32,343 +33,259 @@ v4.1
             position: relative;
         }
 
-        /* --- FONDO ANIMADO MUCHO MÁS FLUIDO --- */
-        .animated-bg {
+        /* --- FONDO MESH GRADIENT ESTILO APPLE --- */
+        .mesh-bg {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #121212;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--negro);
+            overflow: hidden;
             z-index: 0;
+            /* Este filtro fusiona las manchas de color creando el efecto líquido */
+            filter: blur(90px) saturate(120%);
         }
 
-        .orb {
+        .mesh-blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(50px);
-            /* Animación más rápida y dinámica */
-            animation: floatOrb 8s infinite ease-in-out alternate;
+            opacity: 0.8;
+            animation: fluidMesh 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .orb-1 {
-            width: 350px;
-            height: 350px;
-            background: var(--acento);
-            top: 5%;
-            left: 10%;
-            animation-duration: 9s;
-        }
+        /* Manchas gigantes de color */
+        .blob-1 { width: 70vw; height: 70vw; background: var(--acento); top: -20%; left: -10%; }
+        .blob-2 { width: 60vw; height: 60vw; background: var(--mesh-2); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .blob-3 { width: 80vw; height: 80vw; background: var(--mesh-3); top: 30%; left: 20%; animation-delay: -10s; }
+        .blob-4 { width: 50vw; height: 50vw; background: var(--mesh-1); bottom: 10%; left: -15%; animation-delay: -15s; }
 
-        .orb-2 {
-            width: 280px;
-            height: 280px;
-            background: var(--acento-aux2);
-            bottom: 10%;
-            right: 5%;
-            animation-duration: 11s;
-            animation-delay: -2s;
-        }
-
-        .orb-3 {
-            width: 220px;
-            height: 220px;
-            background: var(--acento-aux1);
-            top: 50%;
-            left: 50%;
-            animation-duration: 7s;
-            animation-delay: -4s;
-        }
-        
-        .orb-4 {
-            width: 250px;
-            height: 250px;
-            background: var(--acento);
-            bottom: 30%;
-            left: -5%;
-            animation-duration: 10s;
-            animation-delay: -6s;
-        }
-
-        /* Movimientos más amplios para el fondo */
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(80px, -60px) scale(1.15); }
-            50% { transform: translate(-50px, 80px) scale(0.9); }
-            75% { transform: translate(-90px, -40px) scale(1.05); }
-            100% { transform: translate(0, 0) scale(1); }
+        @keyframes fluidMesh {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(5vw, -5vh) scale(1.1) rotate(5deg); }
+            66% { transform: translate(-5vw, 5vh) scale(0.9) rotate(-5deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); }
         }
 
         /* --- CONTENEDOR PRINCIPAL --- */
         .content-wrapper {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-y: auto; 
-            padding: 20px;
-            z-index: 10;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            overflow-y: auto; padding: 20px; z-index: 10;
         }
 
-        /* --- ESTILO LIQUID GLASS (MÁS TRANSPARENTE) --- */
+        /* --- EXTREME LIQUID GLASS --- */
         .glass-card {
-            /* Opacidad reducida drásticamente (de 0.15 a 0.06) para mayor transparencia */
-            background: linear-gradient(135deg, rgba(248, 248, 250, 0.06) 0%, rgba(248, 248, 250, 0.01) 100%);
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            /* Saturate hace que los colores del fondo "brillen" a través del cristal */
+            backdrop-filter: blur(40px) saturate(160%); 
+            -webkit-backdrop-filter: blur(40px) saturate(160%);
             
-            border-top: 1px solid rgba(248, 248, 250, 0.3);
-            border-left: 1px solid rgba(248, 248, 250, 0.2);
-            border-bottom: 1px solid rgba(248, 248, 250, 0.05);
-            border-right: 1px solid rgba(248, 248, 250, 0.05);
+            /* Biselado de luz extremo (muy Apple) */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
             
-            border-radius: 28px;
-            box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(248, 248, 250, 0.03);
-            padding: 40px 30px;
+            border-radius: 32px; /* Un poco más redondo */
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.1);
+            padding: 45px 35px;
             text-align: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             flex-shrink: 0;
             
-            animation: springIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: springIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
             opacity: 0;
         }
 
         @keyframes springIn {
-            0% { opacity: 0; transform: scale(0.8) translateY(40px); }
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* --- LOGO EN VEZ DE TEXTO --- */
         .logo-img {
-            max-width: 200px; /* Ajusta este tamaño según tu logo */
-            width: 100%;
-            height: auto;
-            margin: 0 auto 20px auto;
+            max-width: 220px;
+            width: 100%; height: auto;
+            margin: 0 auto 25px auto;
             display: block;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
         }
 
         .hero-description {
-            margin-bottom: 25px; 
-            font-size: 15px;
-            line-height: 1.5;
-            color: rgba(248, 248, 250, 0.9);
+            margin-bottom: 30px; 
+            font-size: 15px; line-height: 1.5;
+            color: rgba(248, 248, 250, 0.85);
+            font-weight: 400;
         }
 
-        /* --- BOTONES ANIMADOS (NUEVO COMPORTAMIENTO) --- */
+        /* --- BOTONES PRINCIPALES --- */
         .btn {
-            background: linear-gradient(135deg, rgba(248, 248, 250, 0.15) 0%, rgba(248, 248, 250, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
             color: var(--blanco);
-            border-top: 1px solid rgba(248, 248, 250, 0.3);
-            border-left: 1px solid rgba(248, 248, 250, 0.2);
-            border-bottom: 1px solid transparent;
-            border-right: 1px solid transparent;
-            padding: 15px 24px; 
+            border: 1px solid transparent;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 16px 24px; 
             border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 16px; font-weight: 600; letter-spacing: 0.5px;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             width: 100%;
-            /* Transición fluida */
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
 
-        /* Al pasar el mouse, solo se expande un poco (no brinca hacia arriba) */
         .btn:hover {
-            background: linear-gradient(135deg, rgba(248, 248, 250, 0.25) 0%, rgba(248, 248, 250, 0.1) 100%);
-            transform: scale(1.03); 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%);
+            transform: scale(1.02); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
         }
 
-        /* Animación profunda al hacer clic */
         .btn:active {
-            transform: scale(0.94); /* Se hace más chico simulando el rebote de un botón físico */
+            transform: scale(0.95); 
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.1s; /* Más rápido al presionar */
+            transition: all 0.1s;
         }
 
         .btn-primary {
-            /* Usamos el color de detalles exacto */
             background: linear-gradient(135deg, var(--acento) 0%, #2b087a 100%);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
             margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(58, 12, 163, 0.3);
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #4a15c3 0%, var(--acento) 100%);
-        }
+        .btn-primary:hover { background: linear-gradient(135deg, #4a15c3 0%, var(--acento) 100%); }
 
-        /* --- VENTANA MODAL LIQUID --- */
+        /* --- VENTANA MODAL --- */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(18, 18, 18, 0.4);
-            backdrop-filter: blur(8px); 
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.5);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; padding: 20px;
         }
 
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
 
         .modal-content {
-            transform: scale(0.7) translateY(50px);
-            opacity: 0;
-            width: 100%;
-            max-width: 400px;
+            transform: scale(0.85) translateY(30px); opacity: 0;
+            width: 100%; max-width: 400px;
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
         }
 
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
 
-        /* --- LA X INTERACTIVA Y GIRATORIA --- */
+        /* --- BOTÓN X (DISEÑO Y ANIMACIÓN EXACTA) --- */
         .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(248, 248, 250, 0.1);
-            border: 1px solid rgba(248, 248, 250, 0.2);
-            color: var(--blanco);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Eje de rotación desde una esquina para efecto bisagra/péndulo */
-            transform-origin: bottom left; 
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 34px; height: 34px;
+            border-radius: 50%; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            /* Animación suave para el hover y colores */
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
             z-index: 10;
         }
 
-        /* Al pasar el mouse hace un ligero péndulo */
+        /* Hover: Estático (sin girar), solo flota hacia arriba un poco */
         .close-btn:hover {
-            background: rgba(248, 248, 250, 0.25);
-            transform: rotate(-15deg) scale(1.1);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        
-        /* Al dar clic cambia a rojo y gira dramáticamente desde la esquina */
-        .close-btn:active {
-            background-color: #ef233c; /* Rojo */
-            border-color: #ef233c;
-            color: white;
-            transform: rotate(-60deg) scale(0.9); 
-            transition: all 0.1s; /* Reacción inmediata al clic */
+
+        /* La X interna dibujada con CSS para girar perfecto */
+        .x-icon {
+            position: relative; width: 14px; height: 14px;
+            /* La transición del giro */
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Palitos de la X */
+        .x-icon::before, .x-icon::after {
+            content: ''; position: absolute;
+            top: 50%; left: 0; width: 100%; height: 1.5px;
+            background: #fff; border-radius: 2px;
+        }
+        .x-icon::before { transform: translateY(-50%) rotate(45deg); }
+        .x-icon::after { transform: translateY(-50%) rotate(-45deg); }
+
+        /* ESTADO ACTIVO/CLIC (Añadido vía JS para ver la animación antes de cerrar) */
+        .close-btn.is-clicked {
+            background-color: #ef233c !important;
+            border-color: #ef233c !important;
+            transform: scale(0.85) !important; /* Rebote hacia adentro */
+            box-shadow: none !important;
+        }
+
+        .close-btn.is-clicked .x-icon {
+            transform: rotate(180deg); /* El giro exacto del GIF */
         }
 
         /* --- INPUT --- */
         .input-code {
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            background: rgba(18, 18, 18, 0.3);
-            border: 1px solid rgba(248, 248, 250, 0.1);
-            border-top: 1px solid rgba(18, 18, 18, 0.6); 
-            color: var(--blanco);
-            font-size: 16px; 
-            text-align: center;
-            outline: none;
-            margin-top: 15px;
+            width: 100%; padding: 18px; border-radius: 16px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(0, 0, 0, 0.6); 
+            color: var(--blanco); font-size: 16px; text-align: center;
+            outline: none; margin-top: 20px;
             transition: all 0.3s ease;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
         }
 
         .input-code:focus {
-            background: rgba(30, 30, 30, 0.4);
-            border-color: rgba(248, 248, 250, 0.3);
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2), 0 0 15px rgba(58, 12, 163, 0.4);
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.3), 0 0 20px rgba(58, 12, 163, 0.5);
         }
 
-        /* --- LOADER EN COLOR "ACENTO" ESTRICTO --- */
-        .loader-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* --- LOADER --- */
+        .loader-container { display: none; flex-direction: column; align-items: center; margin-top: 25px; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .spinner {
-            width: 45px;
-            height: 45px;
-            border: 4px solid rgba(248, 248, 250, 0.1);
-            /* Usando estrictamente el color detallado 3a0ca3 */
-            border-top: 4px solid var(--acento);
+            width: 45px; height: 45px;
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top: 3px solid var(--acento);
             border-radius: 50%;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; 
             margin-bottom: 15px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .status-msg {
-            font-size: 15px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: 500;
-        }
+        .status-msg { font-size: 15px; margin-bottom: 15px; text-align: center; font-weight: 500; }
 
         .error-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-            display: none;
-            color: #ef233c;
+            font-size: 40px; margin-bottom: 10px; display: none; color: #ef233c;
             text-shadow: 0 0 15px rgba(239, 35, 60, 0.4);
             animation: springIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         @media (max-width: 380px) {
-            .glass-card { padding: 30px 20px; }
-            .logo-img { max-width: 160px; }
+            .glass-card { padding: 35px 25px; }
+            .logo-img { max-width: 180px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="animated-bg">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-        <div class="orb orb-4"></div>
+    <!-- Fondo Mesh Estilo Apple -->
+    <div class="mesh-bg">
+        <div class="mesh-blob blob-1"></div>
+        <div class="mesh-blob blob-2"></div>
+        <div class="mesh-blob blob-3"></div>
+        <div class="mesh-blob blob-4"></div>
     </div>
 
     <div class="content-wrapper">
         <div class="glass-card">
             <!-- AQUÍ VA TU LOGO -->
-            <!-- Solo reemplaza 'ruta-a-tu-logo.png' por el archivo de tu logo -->
             <img src="assets/dosa-cloud.png" alt="Dos A Cloud" class="logo-img">
             
             <p class="hero-description">Accede a tu galería privada ingresando tu código de evento.</p>
@@ -378,11 +295,15 @@ v4.1
 
     <div class="modal-overlay" id="modal">
         <div class="glass-card modal-content" style="animation: none;"> 
-            <button class="close-btn" onclick="closeModal()">✕</button>
+            
+            <!-- NUEVO BOTÓN X -->
+            <button class="close-btn" id="closeBtn" onclick="closeModalConAnimacion()">
+                <span class="x-icon"></span>
+            </button>
             
             <div id="view-input">
-                <h2 style="font-size: 22px; margin-bottom: 5px; font-weight: 600;">Buscar Galería</h2>
-                <p style="font-size: 14px; opacity: 0.8;">Ingresa el código proporcionado</p>
+                <h2 style="font-size: 24px; margin-bottom: 5px; font-weight: 700; letter-spacing: -0.5px;">Buscar Galería</h2>
+                <p style="font-size: 14px; opacity: 0.7;">Ingresa el código proporcionado</p>
                 <input type="text" id="codigoInput" class="input-code" placeholder="Ej. BODA2026" autocomplete="off">
                 <button class="btn btn-primary" onclick="buscarCodigo()">Buscar código</button>
             </div>
@@ -406,6 +327,7 @@ v4.1
         const errorIcon = document.getElementById('error-icon');
         const statusText = document.getElementById('status-text');
         const btnRetry = document.getElementById('btn-retry');
+        const closeBtn = document.getElementById('closeBtn');
 
         function openModal() {
             modal.classList.add('active');
@@ -413,8 +335,20 @@ v4.1
             setTimeout(() => codigoInput.focus(), 300);
         }
 
-        function closeModal() {
-            modal.classList.remove('active');
+        // --- NUEVA FUNCIÓN PARA CERRAR CON ANIMACIÓN DE LA X ---
+        function closeModalConAnimacion() {
+            // Le agregamos la clase que lo pone rojo, lo hunde y gira la X
+            closeBtn.classList.add('is-clicked');
+            
+            // Esperamos 350 milisegundos para que el usuario alcance a ver el giro
+            setTimeout(() => {
+                modal.classList.remove('active');
+                
+                // Le quitamos la clase después de cerrar para que esté listo la próxima vez
+                setTimeout(() => {
+                    closeBtn.classList.remove('is-clicked');
+                }, 400); 
+            }, 350); 
         }
 
         function resetModal() {
@@ -458,7 +392,6 @@ v4.1
                     setTimeout(() => {
                         if (data[codigo]) {
                             statusText.innerText = '¡Código encontrado! Redirigiendo...';
-                            // El spinner ya no cambia de color, se mantiene en #3a0ca3
                             
                             setTimeout(() => {
                                 window.location.href = data[codigo];
