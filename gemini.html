@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dos A Cloud | Descarga tus fotos</title>
+    <style>
+        /* --- VARIABLES DE COLOR --- */
+        :root {
+            --blanco: #f8f8fa;
+            --negro: #1e1e1e;
+            --acento: #3a0ca3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* 1. BODY SEPARADO DEL CENTRADO */
+        body {
+            background-color: var(--negro);
+            color: var(--blanco);
+            height: 100vh;
+            overflow: hidden; /* Solo para evitar que el fondo genere scroll */
+            position: relative;
+        }
+
+        .animated-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, var(--acento) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 20%, #7209b7 0%, transparent 30%);
+            animation: rotateBg 15s linear infinite;
+            z-index: 0;
+        }
+
+        /* 2. NUEVO CONTENEDOR PARA EVITAR EL CORTE */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto; /* Permite scroll seguro si hay zoom */
+            padding: 20px;
+        }
+
+        /* --- ESTILO LIQUID GLASS --- */
+        .glass-card {
+            background: rgba(248, 248, 250, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(248, 248, 250, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            margin: auto; /* Ayuda extra al flexbox */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hero-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        /* --- BOTONES --- */
+        .btn {
+            background: rgba(248, 248, 250, 0.2);
+            color: var(--blanco);
+            border: 1px solid rgba(248, 248, 250, 0.4);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: rgba(248, 248, 250, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: var(--acento);
+            border: none;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background: #4a15c3;
+        }
+
+        /* --- VENTANA MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            transform: scale(0.8) translateY(20px);
+            opacity: 0;
+            margin: auto;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(248, 248, 250, 0.1);
+            border: none;
+            color: var(--blanco);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(248, 248, 250, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* --- FORMULARIO Y ESTADOS --- */
+        .input-code {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(30, 30, 30, 0.5);
+            border: 1px solid rgba(248, 248, 250, 0.2);
+            color: var(--blanco);
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .input-code:focus {
+            border-color: var(--acento);
+            box-shadow: 0 0 10px rgba(58, 12, 163, 0.5);
+        }
+
+        .loader-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(248, 248, 250, 0.1);
+            border-top: 4px solid var(--acento);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-msg {
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="animated-bg"></div>
+
+    <!-- 3. LA TARJETA ENVUELTA EN EL CONTENEDOR NUEVO -->
+    <div class="content-wrapper">
+        <div class="glass-card">
+            <h1 class="hero-title">Dos A Cloud</h1>
+            <p class="hero-subtitle">by Dos A Creative</p>
+            <p style="margin-bottom: 25px; font-size: 15px;">Accede a tu galería privada ingresando tu código de evento.</p>
+            <button class="btn" onclick="openModal()">Insertar código</button>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="glass-card modal-content">
+            <button class="close-btn" onclick="closeModal()">✕</button>
+            
+            <div id="view-input">
+                <h2 style="font-size: 20px; margin-bottom: 5px;">Buscar Galería</h2>
+                <p style="font-size: 13px; opacity: 0.8;">Ingresa el código proporcionado</p>
+                <input type="text" id="codigoInput" class="input-code" placeholder="Ej. BODA2026" autocomplete="off">
+                <button class="btn btn-primary" onclick="buscarCodigo()">Buscar código</button>
+            </div>
+
+            <div id="view-status" class="loader-container">
+                <div id="spinner" class="spinner"></div>
+                <div id="error-icon" class="error-icon">✕</div>
+                <p id="status-text" class="status-msg">Buscando código en la nube...</p>
+                <button id="btn-retry" class="btn btn-primary" style="display: none;" onclick="resetModal()">Reintentar</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const viewInput = document.getElementById('view-input');
+        const viewStatus = document.getElementById('view-status');
+        const codigoInput = document.getElementById('codigoInput');
+        const spinner = document.getElementById('spinner');
+        const errorIcon = document.getElementById('error-icon');
+        const statusText = document.getElementById('status-text');
+        const btnRetry = document.getElementById('btn-retry');
+
+        function openModal() {
+            modal.classList.add('active');
+            resetModal();
+            codigoInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function resetModal() {
+            viewInput.style.display = 'block';
+            viewStatus.style.display = 'none';
+            codigoInput.value = '';
+            
+            spinner.style.display = 'block';
+            spinner.style.borderTopColor = 'var(--acento)';
+            errorIcon.style.display = 'none';
+            btnRetry.style.display = 'none';
+            statusText.innerText = 'Buscando código en la nube...';
+        }
+
+        function mostrarError(mensaje) {
+            spinner.style.display = 'none';
+            errorIcon.style.display = 'block';
+            statusText.innerText = mensaje;
+            btnRetry.style.display = 'block';
+        }
+
+        function buscarCodigo() {
+            const codigo = codigoInput.value.trim().toUpperCase();
+            
+            if(codigo === '') return;
+
+            viewInput.style.display = 'none';
+            viewStatus.style.display = 'flex';
+
+            fetch('codigos.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error de red');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setTimeout(() => {
+                        if (data[codigo]) {
+                            statusText.innerText = '¡Código encontrado! Redirigiendo...';
+                            spinner.style.borderTopColor = '#00ff88';
+                            
+                            setTimeout(() => {
+                                window.location.href = data[codigo];
+                            }, 1000);
+                        } else {
+                            mostrarError('No se encontró el código de evento.');
+                        }
+                    }, 1500);
+                })
+                .catch(error => {
+                    console.error('Error al cargar codigos.json:', error);
+                    setTimeout(() => {
+                        // Mensaje de error ajustado para recordar lo del servidor
+                        mostrarError('Error de red. Recuerda usar un servidor local (Live Server).');
+                    }, 1500);
+                });
+        }
+
+        // --- NUEVO: FUNCIONALIDAD TECLA ENTER ---
+        codigoInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                buscarCodigo();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Dos A Cloud</title>
+
+    <!-- Google Fonts -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+        <meta name="theme-color" content="#1e1e1e">
+<meta name="color-scheme" content="dark">
+
+</head>
+
+<body>
+
+    <!-- Fondo Animado -->
+
+    <div class="background">
+
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+
+    </div>
+
+    <!-- Glow Mouse -->
+
+    <div class="mouse-glow"></div>
+
+    <!-- Hero -->
+
+    <main class="hero">
+
+        <section class="glass-card">
+
+            <img
+                src="assets/dosa-cloud.png"
+                class="logo"
+                alt="Dos A Cloud">
+
+            <h1>Dos A Cloud</h1>
+
+            <span>by Dos A Creative</span>
+
+            <p>
+
+                Ingresa el código de tu evento
+                para acceder a todas tus fotografías.
+
+            </p>
+
+            <button
+                id="openModal"
+                class="glass-btn">
+
+                Insertar código
+
+            </button>
+
+        </section>
+
+    </main>
+
+    <!-- Modal -->
+
+    <div
+        id="modal"
+        class="modal">
+
+        <div class="modal-card">
+
+            <button
+                class="close">
+
+                ✕
+
+            </button>
+
+            <h2>
+
+                Acceso al Evento
+
+            </h2>
+
+            <p>
+
+                Introduce el código proporcionado
+                por tu fotógrafo.
+
+            </p>
+
+            <input
+                type="text"
+                id="codigo"
+                placeholder="Ej. XVSOFIA2026">
+
+            <button
+                id="buscar"
+                class="glass-btn">
+
+                Buscar código
+
+            </button>
+
+        </div>
+
+    </div>
+
+<!--==========================
+        LOADER
+===========================-->
+
+<div id="loader" class="loader">
+
+    <div class="loader-card">
+
+        <div class="loader-ring">
+
+            <div class="ring"></div>
+
+        </div>
+
+        <h2 id="loaderTitle">
+
+            Buscando recuerdos...
+
+        </h2>
+
+        <p id="loaderText">
+
+            Consultando la nube...
+
+        </p>
+
+    </div>
+
+</div>
+
+<!--==========================
+        RESULTADO
+===========================-->
+
+<div id="resultModal" class="result-modal">
+
+    <div class="result-card">
+
+        <div id="resultIcon" class="result-icon">
+
+            ✕
+
+        </div>
+
+        <h2 id="resultTitle">
+
+            Código no encontrado
+
+        </h2>
+
+        <p id="resultMessage">
+
+            Verifica el código e intenta nuevamente.
+
+        </p>
+
+        <button id="retry" class="glass-btn">
+
+            Reintentar
+
+        </button>
+
+    </div>
+
+</div>
+    <!-- JS -->
+
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>

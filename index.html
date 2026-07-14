@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dos A Cloud by Dos A Creative</title>
+    <style>
+        /* Tipografía estilo Apple y Reseteo */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            /* Fondo animado vibrante y "rico" */
+            background: linear-gradient(-45deg, #1d2b64, #f8cdda, #1d2b64, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Clases de Liquid Glass / Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Contenedor Principal */
+        .main-container {
+            text-align: center;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.7;
+            margin-bottom: 32px;
+        }
+
+        /* Botones estilo Apple */
+        button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: scale(1.02);
+            background: #ffffff;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        button.outline {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        button.outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal / Pestaña Flotante */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            transform: translateY(40px) scale(0.95);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* Input de texto */
+        input[type="text"] {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Loader Animado */
+        .loader {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Control de Vistas del Modal */
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.4s ease; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla Principal -->
+    <main class="main-container glass-panel" id="main-view">
+        <h1 class="logo">Dos A Cloud <br><span>by Dos A Creative</span></h1>
+        <p class="subtitle">Ingresa el número o código de tu evento para acceder a tu galería.</p>
+        <button onclick="openModal()">Insertar código</button>
+    </main>
+
+    <!-- Modal (Ventana emergente) -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content glass-panel">
+            
+            <!-- Vista 1: Ingresar Código -->
+            <div id="view-input" class="view active">
+                <h2 style="font-size: 20px; margin-bottom: 20px;">Buscar Evento</h2>
+                <input type="text" id="event-code" placeholder="Ej. BODA-123" autocomplete="off">
+                <div class="button-group">
+                    <button onclick="searchEvent()">Buscar galería</button>
+                    <button class="outline" onclick="closeModal()">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- Vista 2: Cargando -->
+            <div id="view-loading" class="view">
+                <div class="loader" style="display: block;"></div>
+                <p style="opacity: 0.8;">Buscando en la nube...</p>
+            </div>
+
+            <!-- Vista 3: Error -->
+            <div id="view-error" class="view">
+                <h2 style="font-size: 20px; margin-bottom: 10px;">Evento no encontrado</h2>
+                <p style="opacity: 0.7; font-size: 14px; margin-bottom: 20px;">Por favor, verifica el código e inténtalo de nuevo.</p>
+                <div class="button-group">
+                    <button onclick="resetModal()">Volver a buscar</button>
+                    <button class="outline" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const viewInput = document.getElementById('view-input');
+        const viewLoading = document.getElementById('view-loading');
+        const viewError = document.getElementById('view-error');
+        const inputCode = document.getElementById('event-code');
+
+        // Función para abrir el modal
+        function openModal() {
+            modal.classList.add('active');
+            resetModal(); // Asegura que siempre abra en la vista de input
+            setTimeout(() => inputCode.focus(), 400); // Enfoca el input después de la animación
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            modal.classList.remove('active');
+            inputCode.value = ''; // Limpia el input
+        }
+
+        // Resetea el modal a la vista inicial
+        function resetModal() {
+            viewInput.classList.add('active');
+            viewLoading.classList.remove('active');
+            viewError.classList.remove('active');
+            inputCode.value = '';
+            inputCode.focus();
+        }
+
+        // Simulación de búsqueda
+        function searchEvent() {
+            const code = inputCode.value.trim().toUpperCase();
+            
+            if (code === "") {
+                inputCode.style.borderColor = "#ff4d4d"; // Rojo si está vacío
+                setTimeout(() => inputCode.style.borderColor = "rgba(255, 255, 255, 0.3)", 1500);
+                return;
+            }
+
+            // Cambiar a vista de carga
+            viewInput.classList.remove('active');
+            viewLoading.classList.add('active');
+
+            // Simular un tiempo de red (2 segundos)
+            setTimeout(() => {
+                viewLoading.classList.remove('active');
+
+                // LÓGICA DE VALIDACIÓN (Aquí conectarías tu base de datos después)
+                // Para el ejemplo: Si el código es 'DOSA', es exitoso. Si no, es error.
+                if (code === "DOSA") {
+                    // Simular redirección exitosa
+                    window.location.href = "#galeria-encontrada"; // Cambiar por tu URL real
+                    alert("¡Código válido! Redirigiendo a la galería de fotos..."); 
+                    closeModal();
+                } else {
+                    // Mostrar error si no existe
+                    viewError.classList.add('active');
+                }
+            }, 2000);
+        }
+
+        // Permitir buscar apretando la tecla "Enter"
+        inputCode.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchEvent();
+            }
+        });
+    </script>
+</body>
+</html>
