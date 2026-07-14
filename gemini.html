@@ -1,4 +1,4 @@
-v7
+v8
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -74,11 +74,8 @@ v7
             backdrop-filter: blur(25px); 
             -webkit-backdrop-filter: blur(25px);
             
-            /* Borde prácticamente invisible, elimina las líneas blancas marcadas */
             border: 1px solid rgba(255, 255, 255, 0.03);
-            
             border-radius: 28px;
-            /* Sombra suave para separar del fondo sin usar bordes duros */
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             padding: 40px 30px;
             text-align: center;
@@ -111,7 +108,7 @@ v7
         .btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
             color: var(--blanco);
-            border: 1px solid rgba(255, 255, 255, 0.05); /* Sin bordes marcados */
+            border: 1px solid rgba(255, 255, 255, 0.05); 
             padding: 15px 24px; border-radius: 50px;
             font-size: 16px; font-weight: 600; cursor: pointer;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -158,14 +155,13 @@ v7
         .close-btn {
             position: absolute; top: 15px; right: 15px;
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.05); /* Borde sutil */
+            border: 1px solid rgba(255, 255, 255, 0.05); 
             width: 32px; height: 32px; border-radius: 50%;
             cursor: pointer; display: flex; justify-content: center; align-items: center;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
             z-index: 10;
         }
 
-        /* Hover: Aumenta tamaño ligeramente, NO sube */
         .close-btn:hover {
             transform: scale(1.15);
             background: rgba(255, 255, 255, 0.2);
@@ -183,7 +179,6 @@ v7
         .x-icon::before { transform: translateY(-50%) rotate(45deg); }
         .x-icon::after { transform: translateY(-50%) rotate(-45deg); }
 
-        /* Estado Clic: Rojo, rebota y gira */
         .close-btn.is-clicked {
             background-color: #ef233c !important;
             transform: scale(0.85) !important;
@@ -194,7 +189,7 @@ v7
         .input-code {
             width: 100%; padding: 16px; border-radius: 14px;
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05); /* Sin bordes gruesos */
+            border: 1px solid rgba(255, 255, 255, 0.05); 
             color: var(--blanco); font-size: 16px; text-align: center;
             outline: none; margin-top: 15px;
             transition: all 0.3s ease; letter-spacing: 1px;
@@ -216,7 +211,7 @@ v7
             border: 3px solid rgba(255, 255, 255, 0.05); border-top: 3px solid var(--acento);
             border-radius: 50%; margin-bottom: 15px;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; 
-            display: none; /* Inicia oculto */
+            display: none; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -232,17 +227,16 @@ v7
             position: absolute; top: 50%; left: 10%;
             width: 80%; height: 4px; border-radius: 4px;
             background-color: #ef233c;
-            opacity: 0; /* Inician invisibles */
+            opacity: 0; 
             box-shadow: 0 0 15px rgba(239, 35, 60, 0.5);
         }
 
-        /* Cuando se activa el error, dibujamos las líneas con rebote */
         .animated-error-x.show-error .line-left {
             animation: drawXLeft 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
         .animated-error-x.show-error .line-right {
             animation: drawXRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            animation-delay: 0.1s; /* Se dibuja una fraccion de segundo después */
+            animation-delay: 0.1s; 
         }
 
         @keyframes drawXLeft {
@@ -256,10 +250,10 @@ v7
 
         /* --- ESTILOS PARA LA MARCA DE VERIFICACIÓN (GIF) --- */
         .animated-success-checkmark {
-            width: 50px; /* Tamaño similar al error */
+            width: 50px; 
             height: 50px;
             margin-bottom: 15px;
-            display: none; /* Oculto por defecto */
+            display: none; 
             justify-content: center;
             align-items: center;
         }
@@ -287,7 +281,6 @@ v7
 
     <div class="content-wrapper">
         <div class="glass-card">
-            <!-- AQUÍ VA TU LOGO -->
             <img src="assets/dosa-cloud.png" alt="Dos A Cloud" class="logo-img">
             
             <p class="hero-description">Accede a tu galería privada ingresando tu código de evento.</p>
@@ -298,7 +291,6 @@ v7
     <div class="modal-overlay" id="modal">
         <div class="glass-card modal-content" style="animation: none;"> 
             
-            <!-- BOTÓN X MEJORADO -->
             <button class="close-btn" id="closeBtn" onclick="closeModalConAnimacion()">
                 <span class="x-icon"></span>
             </button>
@@ -313,11 +305,11 @@ v7
             <div id="view-status" class="loader-container">
                 <div id="spinner" class="spinner"></div>
                 
-                <!-- ICONO DE ERROR ANIMADO -->
+                <!-- ICONO DE ERROR ANIMADO (Aquí estaba el error de la "}") -->
                 <div id="error-icon" class="animated-error-x">
                     <div class="error-line line-left"></div>
                     <div class="error-line line-right"></div>
-                }
+                </div> <!-- AHORA SÍ ESTÁ CERRADO CORRECTAMENTE -->
                 
                 <!-- ICONO DE ÉXITO ANIMADO (GIF) -->
                 <div id="success-icon" class="animated-success-checkmark">
@@ -367,10 +359,9 @@ v7
             
             spinner.style.display = 'block';
             
-            // Reiniciar los iconos de error y éxito
             errorIcon.style.display = 'none';
             errorIcon.classList.remove('show-error');
-            successIcon.style.display = 'none'; // Ocultar el GIF
+            successIcon.style.display = 'none'; 
             
             btnRetry.style.display = 'none';
             statusText.innerText = 'Buscando código en la nube...';
@@ -380,9 +371,7 @@ v7
             spinner.style.display = 'none';
             successIcon.style.display = 'none';
             
-            // Mostrar y activar la animación del error
             errorIcon.style.display = 'block';
-            // Pequeño timeout para asegurar que el navegador reinicie la animación
             setTimeout(() => {
                 errorIcon.classList.add('show-error');
             }, 10);
@@ -397,7 +386,7 @@ v7
             errorIcon.classList.remove('show-error');
             
             // Mostrar la marca de verificación (GIF)
-            successIcon.style.display = 'flex'; // Usamos flex para centrar
+            successIcon.style.display = 'flex'; 
             
             // Actualizar el texto
             statusText.innerText = mensaje;
@@ -405,7 +394,7 @@ v7
             // Ocultar botón de reintentar si está visible
             btnRetry.style.display = 'none';
             
-            // Esperar un tiempo antes de redirigir para ver el GIF (ej. 1.5s)
+            // Esperar 1.5s antes de redirigir para que el usuario alcance a ver el GIF
             setTimeout(() => {
                 window.location.href = urlRedirect;
             }, 1500);
@@ -424,7 +413,6 @@ v7
             codigoInput.blur(); 
             viewInput.style.display = 'none';
             viewStatus.style.display = 'flex';
-            // Asegurarnos de que el spinner está visible
             spinner.style.display = 'block';
 
             fetch('codigos.json')
@@ -435,7 +423,6 @@ v7
                 .then(data => {
                     setTimeout(() => {
                         if (data[codigo]) {
-                            // LLAMA A LA NUEVA FUNCIÓN DE ÉXITO
                             mostrarExito('¡Código encontrado! Redirigiendo...', data[codigo]);
                         } else {
                             mostrarError('No se encontró el código de evento.');
