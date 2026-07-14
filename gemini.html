@@ -1,4 +1,4 @@
-v6
+v7
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -216,6 +216,7 @@ v6
             border: 3px solid rgba(255, 255, 255, 0.05); border-top: 3px solid var(--acento);
             border-radius: 50%; margin-bottom: 15px;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; 
+            display: none; /* Inicia oculto */
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -251,6 +252,22 @@ v6
         @keyframes drawXRight {
             0% { opacity: 0; transform: translateY(-50%) rotate(0deg) scaleX(0); }
             100% { opacity: 1; transform: translateY(-50%) rotate(-45deg) scaleX(1); }
+        }
+
+        /* --- ESTILOS PARA LA MARCA DE VERIFICACIÓN (GIF) --- */
+        .animated-success-checkmark {
+            width: 50px; /* Tamaño similar al error */
+            height: 50px;
+            margin-bottom: 15px;
+            display: none; /* Oculto por defecto */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-gif {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
         }
 
         @media (max-width: 380px) {
@@ -296,10 +313,15 @@ v6
             <div id="view-status" class="loader-container">
                 <div id="spinner" class="spinner"></div>
                 
-                <!-- NUEVO ICONO DE ERROR ANIMADO -->
+                <!-- ICONO DE ERROR ANIMADO -->
                 <div id="error-icon" class="animated-error-x">
                     <div class="error-line line-left"></div>
                     <div class="error-line line-right"></div>
+                }
+                
+                <!-- ICONO DE ÉXITO ANIMADO (GIF) -->
+                <div id="success-icon" class="animated-success-checkmark">
+                    <img src="icons8-marca-de-verificación-100.gif" alt="Código encontrado" class="success-gif">
                 </div>
 
                 <p id="status-text" class="status-msg">Buscando código en la nube...</p>
@@ -316,6 +338,7 @@ v6
         const codigoInput = document.getElementById('codigoInput');
         const spinner = document.getElementById('spinner');
         const errorIcon = document.getElementById('error-icon');
+        const successIcon = document.getElementById('success-icon');
         const statusText = document.getElementById('status-text');
         const btnRetry = document.getElementById('btn-retry');
         const closeBtn = document.getElementById('closeBtn');
@@ -344,9 +367,10 @@ v6
             
             spinner.style.display = 'block';
             
-            // Reiniciar el icono de error animado
+            // Reiniciar los iconos de error y éxito
             errorIcon.style.display = 'none';
             errorIcon.classList.remove('show-error');
+            successIcon.style.display = 'none'; // Ocultar el GIF
             
             btnRetry.style.display = 'none';
             statusText.innerText = 'Buscando código en la nube...';
@@ -354,6 +378,7 @@ v6
 
         function mostrarError(mensaje) {
             spinner.style.display = 'none';
+            successIcon.style.display = 'none';
             
             // Mostrar y activar la animación del error
             errorIcon.style.display = 'block';
@@ -364,6 +389,26 @@ v6
             
             statusText.innerText = mensaje;
             btnRetry.style.display = 'block';
+        }
+
+        function mostrarExito(mensaje, urlRedirect) {
+            spinner.style.display = 'none';
+            errorIcon.style.display = 'none';
+            errorIcon.classList.remove('show-error');
+            
+            // Mostrar la marca de verificación (GIF)
+            successIcon.style.display = 'flex'; // Usamos flex para centrar
+            
+            // Actualizar el texto
+            statusText.innerText = mensaje;
+            
+            // Ocultar botón de reintentar si está visible
+            btnRetry.style.display = 'none';
+            
+            // Esperar un tiempo antes de redirigir para ver el GIF (ej. 1.5s)
+            setTimeout(() => {
+                window.location.href = urlRedirect;
+            }, 1500);
         }
 
         function buscarCodigo() {
@@ -379,6 +424,8 @@ v6
             codigoInput.blur(); 
             viewInput.style.display = 'none';
             viewStatus.style.display = 'flex';
+            // Asegurarnos de que el spinner está visible
+            spinner.style.display = 'block';
 
             fetch('codigos.json')
                 .then(response => {
@@ -388,10 +435,8 @@ v6
                 .then(data => {
                     setTimeout(() => {
                         if (data[codigo]) {
-                            statusText.innerText = '¡Código encontrado! Redirigiendo...';
-                            setTimeout(() => {
-                                window.location.href = data[codigo];
-                            }, 1000);
+                            // LLAMA A LA NUEVA FUNCIÓN DE ÉXITO
+                            mostrarExito('¡Código encontrado! Redirigiendo...', data[codigo]);
                         } else {
                             mostrarError('No se encontró el código de evento.');
                         }
