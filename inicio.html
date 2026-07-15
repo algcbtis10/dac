@@ -1,14 +1,10 @@
-v11
+v12
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dos A Cloud | Descarga tus fotos</title>
-    
-    <!-- ICONO DE PÁGINA (FAVICON) -->
-    <link rel="icon" type="image/png" href="assets/dosa-icon.png">
-
     <style>
         /* --- VARIABLES DE COLOR --- */
         :root {
@@ -17,7 +13,7 @@ v11
             --acento: #3a0ca3; 
             --acento-aux1: #4361ee;
             --acento-aux2: #7209b7;
-            --exito: #00e676; /* Verde puro sin resplandores */
+            --exito: #06d6a0; /* Verde neón para el check */
         }
 
         * {
@@ -111,7 +107,7 @@ v11
         .btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
             color: var(--blanco);
-            border: 1px solid rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 15px 24px; border-radius: 50px;
             font-size: 16px; font-weight: 600; cursor: pointer;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -154,21 +150,18 @@ v11
 
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
 
-        /* --- BOTÓN X --- */
+        /* --- BOTÓN X (CERRAR) --- */
         .close-btn {
             position: absolute; top: 15px; right: 15px;
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
             width: 32px; height: 32px; border-radius: 50%;
             cursor: pointer; display: flex; justify-content: center; align-items: center;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
             z-index: 10;
         }
 
-        .close-btn:hover {
-            transform: scale(1.15);
-            background: rgba(255, 255, 255, 0.2);
-        }
+        .close-btn:hover { transform: scale(1.15); background: rgba(255, 255, 255, 0.2); }
 
         .x-icon {
             position: relative; width: 12px; height: 12px;
@@ -182,17 +175,14 @@ v11
         .x-icon::before { transform: translateY(-50%) rotate(45deg); }
         .x-icon::after { transform: translateY(-50%) rotate(-45deg); }
 
-        .close-btn.is-clicked {
-            background-color: #ef233c !important;
-            transform: scale(0.85) !important;
-        }
+        .close-btn.is-clicked { background-color: #ef233c !important; transform: scale(0.85) !important; }
         .close-btn.is-clicked .x-icon { transform: rotate(180deg); }
 
         /* --- INPUT --- */
         .input-code {
             width: 100%; padding: 16px; border-radius: 14px;
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
             color: var(--blanco); font-size: 16px; text-align: center;
             outline: none; margin-top: 15px;
             transition: all 0.3s ease; letter-spacing: 1px;
@@ -200,12 +190,11 @@ v11
         }
 
         .input-code:focus {
-            background: rgba(0, 0, 0, 0.5);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.1);
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.2), 0 0 15px rgba(58, 12, 163, 0.4);
         }
 
-        /* --- LOADER --- */
+        /* --- LOADER Y ESTADOS --- */
         .loader-container { display: none; flex-direction: column; align-items: center; margin-top: 20px; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -214,79 +203,56 @@ v11
             border: 3px solid rgba(255, 255, 255, 0.05); border-top: 3px solid var(--acento);
             border-radius: 50%; margin-bottom: 15px;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; 
-            display: none; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .status-msg { font-size: 15px; margin-bottom: 15px; text-align: center; font-weight: 500; }
+        .status-msg { font-size: 15px; margin-bottom: 15px; text-align: center; font-weight: 500; transition: color 0.3s ease; }
 
-        /* --- ANIMACIÓN ERROR X --- */
+        /* --- ANIMACIÓN ERROR (X) --- */
         .animated-error-x {
             position: relative; width: 50px; height: 50px;
             margin-bottom: 10px; display: none;
         }
-
         .error-line {
-            position: absolute; top: 50%; left: 10%;
-            width: 80%; height: 4px; border-radius: 4px;
-            background-color: #ef233c;
-            opacity: 0; 
-            box-shadow: 0 0 15px rgba(239, 35, 60, 0.5);
+            position: absolute; top: 50%; left: 10%; width: 80%; height: 4px; border-radius: 4px;
+            background-color: #ef233c; opacity: 0; box-shadow: 0 0 15px rgba(239, 35, 60, 0.5);
         }
-
         .animated-error-x.show-error .line-left { animation: drawXLeft 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         .animated-error-x.show-error .line-right { animation: drawXRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: 0.1s; }
 
         @keyframes drawXLeft { 0% { opacity: 0; transform: translateY(-50%) rotate(0deg) scaleX(0); } 100% { opacity: 1; transform: translateY(-50%) rotate(45deg) scaleX(1); } }
         @keyframes drawXRight { 0% { opacity: 0; transform: translateY(-50%) rotate(0deg) scaleX(0); } 100% { opacity: 1; transform: translateY(-50%) rotate(-45deg) scaleX(1); } }
 
-        /* --- ANIMACIÓN CHECK DE ÉXITO FÍSICO (2 TRAZOS SEPARADOS) --- */
-        .animated-check-svg {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 15px;
-            display: none; 
+        /* --- ANIMACIÓN ÉXITO (CHECK) --- */
+        .animated-success-check {
+            position: relative; width: 50px; height: 50px;
+            margin-bottom: 10px; display: none;
+        }
+        .check-line {
+            position: absolute; height: 4px; border-radius: 4px;
+            background-color: var(--exito); opacity: 0; 
+            box-shadow: 0 0 15px rgba(6, 214, 160, 0.5);
+        }
+        
+        /* Ajuste preciso de los ángulos y posiciones para que conecten perfecto */
+        .check-short { width: 18px; top: 52%; left: 16%; transform-origin: left center; }
+        .check-long { width: 34px; top: 76%; left: 39%; transform-origin: left center; }
+
+        .animated-success-check.show-success .check-short {
+            animation: drawCheckShort 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .animated-success-check.show-success .check-long {
+            animation: drawCheckLong 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.2s; /* Comienza justo cuando termina el corto */
         }
 
-        .check-short, .check-long {
-            stroke: var(--exito);
-            stroke-width: 4.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            fill: none;
-            /* Cero filtros, sombras o fondos para mantenerlo limpio */
+        @keyframes drawCheckShort {
+            0% { opacity: 0; transform: rotate(45deg) scaleX(0); }
+            100% { opacity: 1; transform: rotate(45deg) scaleX(1); }
         }
-
-        /* Configuramos el largo exacto de cada línea para animarlas por separado */
-        .check-short {
-            stroke-dasharray: 15;
-            stroke-dashoffset: 15;
-        }
-        .check-long {
-            stroke-dasharray: 30;
-            stroke-dashoffset: 30;
-        }
-
-        /* 
-           Aquí ocurre la magia: 
-           1. La pata corta arranca rápido y frena (ease-out) al llegar a la esquina.
-           2. La pata larga espera a que termine la corta (delay 0.25s) y arranca.
-        */
-        .animated-check-svg.show-success .check-short {
-            animation: drawShort 0.25s cubic-bezier(0.0, 0.0, 0.2, 1) forwards;
-        }
-        .animated-check-svg.show-success .check-long {
-            animation: drawLong 0.35s cubic-bezier(0.0, 0.0, 0.2, 1) forwards;
-            animation-delay: 0.23s; /* Leve traslape para que se sienta continuo */
-        }
-
-        @keyframes drawShort {
-            0% { stroke-dashoffset: 15; }
-            100% { stroke-dashoffset: 0; }
-        }
-        @keyframes drawLong {
-            0% { stroke-dashoffset: 30; }
-            100% { stroke-dashoffset: 0; }
+        @keyframes drawCheckLong {
+            0% { opacity: 0; transform: rotate(-55deg) scaleX(0); }
+            100% { opacity: 1; transform: rotate(-55deg) scaleX(1); }
         }
 
         @media (max-width: 380px) {
@@ -306,7 +272,8 @@ v11
 
     <div class="content-wrapper">
         <div class="glass-card">
-            <img src="assets/dosa-cloud.png" alt="Dos A Cloud" class="logo-img">
+            <!-- AQUÍ VA TU LOGO -->
+            <img src="ruta-a-tu-logo.png" alt="Dos A Cloud" class="logo-img">
             
             <p class="hero-description">Accede a tu galería privada ingresando tu código de evento.</p>
             <button class="btn" onclick="openModal()">Insertar código</button>
@@ -330,16 +297,17 @@ v11
             <div id="view-status" class="loader-container">
                 <div id="spinner" class="spinner"></div>
                 
+                <!-- ICONO ERROR ANIMADO -->
                 <div id="error-icon" class="animated-error-x">
                     <div class="error-line line-left"></div>
                     <div class="error-line line-right"></div>
                 </div>
-                
-                <!-- SVG SEPARADO EN DOS LÍNEAS PARA CONTROLAR LA VELOCIDAD DE LA ESQUINA -->
-                <svg id="success-icon" class="animated-check-svg" viewBox="0 0 50 50">
-                    <path class="check-short" d="M14 26 L22 34" />
-                    <path class="check-long" d="M22 34 L38 16" />
-                </svg>
+
+                <!-- ICONO ÉXITO (CHECK) ANIMADO -->
+                <div id="success-icon" class="animated-success-check">
+                    <div class="check-line check-short"></div>
+                    <div class="check-line check-long"></div>
+                </div>
 
                 <p id="status-text" class="status-msg">Buscando código en la nube...</p>
                 <button id="btn-retry" class="btn btn-primary" style="display: none;" onclick="resetModal()">Reintentar</button>
@@ -368,7 +336,6 @@ v11
 
         function closeModalConAnimacion() {
             closeBtn.classList.add('is-clicked');
-            
             setTimeout(() => {
                 modal.classList.remove('active');
                 setTimeout(() => {
@@ -384,47 +351,39 @@ v11
             
             spinner.style.display = 'block';
             
+            // Reiniciar Error
             errorIcon.style.display = 'none';
             errorIcon.classList.remove('show-error');
             
-            successIcon.style.display = 'none'; 
+            // Reiniciar Éxito y color del texto
+            successIcon.style.display = 'none';
             successIcon.classList.remove('show-success');
-            
+            statusText.style.color = ''; 
+            statusText.style.textShadow = '';
+
             btnRetry.style.display = 'none';
             statusText.innerText = 'Buscando código en la nube...';
         }
 
         function mostrarError(mensaje) {
             spinner.style.display = 'none';
-            successIcon.style.display = 'none';
-            successIcon.classList.remove('show-success');
-            
             errorIcon.style.display = 'block';
-            setTimeout(() => {
-                errorIcon.classList.add('show-error');
-            }, 10);
-            
+            setTimeout(() => errorIcon.classList.add('show-error'), 10);
             statusText.innerText = mensaje;
             btnRetry.style.display = 'block';
         }
 
-        function mostrarExito(mensaje, urlRedirect) {
+        function mostrarExito(mensaje) {
             spinner.style.display = 'none';
             
-            errorIcon.style.display = 'none';
-            errorIcon.classList.remove('show-error');
+            // Mostrar y activar la animación del check
+            successIcon.style.display = 'block';
+            setTimeout(() => successIcon.classList.add('show-success'), 10);
             
-            successIcon.style.display = 'block'; 
-            setTimeout(() => {
-                successIcon.classList.add('show-success');
-            }, 10);
-            
+            // Le damos un toque verde brillante al texto también
             statusText.innerText = mensaje;
-            btnRetry.style.display = 'none';
-            
-            setTimeout(() => {
-                window.location.href = urlRedirect;
-            }, 1600);
+            statusText.style.color = 'var(--exito)';
+            statusText.style.textShadow = '0 0 10px rgba(6, 214, 160, 0.4)';
         }
 
         function buscarCodigo() {
@@ -440,7 +399,6 @@ v11
             codigoInput.blur(); 
             viewInput.style.display = 'none';
             viewStatus.style.display = 'flex';
-            spinner.style.display = 'block';
 
             fetch('codigos.json')
                 .then(response => {
@@ -450,7 +408,13 @@ v11
                 .then(data => {
                     setTimeout(() => {
                         if (data[codigo]) {
-                            mostrarExito('¡Código encontrado! Redirigiendo...', data[codigo]);
+                            // Ejecutamos la función de éxito y animación
+                            mostrarExito('¡Código encontrado! Redirigiendo...');
+                            
+                            // Damos tiempo suficiente (1.5s) para que el usuario disfrute la animación
+                            setTimeout(() => {
+                                window.location.href = data[codigo];
+                            }, 1500);
                         } else {
                             mostrarError('No se encontró el código de evento.');
                         }
