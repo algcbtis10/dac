@@ -1,11 +1,28 @@
-v12.1
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dos A Cloud | Descarga tus fotos</title>
+    <!-- Agregando tu Favicon de la carpeta assets -->
+    <link rel="icon" type="image/png" href="assets/dosa-icon.png">
+
     <style>
+        /* --- IMPORTACIÓN DE TUS FUENTES NEXA --- */
+        @font-face {
+            font-family: 'Nexa';
+            src: url('assets/Nexa-Heavy.ttf') format('truetype');
+            font-weight: 800; /* Para títulos y botones */
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Nexa';
+            src: url('assets/Nexa-ExtraLight.ttf') format('truetype');
+            font-weight: 300; /* Para textos delgados */
+            font-style: normal;
+        }
+
         /* --- VARIABLES DE COLOR --- */
         :root {
             --blanco: #f8f8fa;
@@ -13,52 +30,42 @@ v12.1
             --acento: #3a0ca3; 
             --acento-aux1: #4361ee;
             --acento-aux2: #7209b7;
-            --exito: #06d6a0; /* Verde neón para el check */
+            --exito: #06d6a0; 
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0; box-sizing: border-box;
+            /* Aplicando tu fuente como principal */
+            font-family: 'Nexa', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--negro);
-            color: var(--blanco);
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden; 
-            position: relative;
+            background-color: var(--negro); color: var(--blanco);
+            height: 100vh; width: 100vw; overflow: hidden; position: relative;
         }
 
-        /* --- FONDO DE ORBES --- */
+        /* --- FONDO DE ORBES (MÁS VIVOS) --- */
         .animated-bg {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #0a0a0a;
-            z-index: 0;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; z-index: 0;
         }
 
         .orb {
-            position: absolute;
-            border-radius: 50%;
+            position: absolute; border-radius: 50%;
             filter: blur(60px);
             animation: floatOrb 8s infinite ease-in-out alternate;
         }
 
-        .orb-1 { width: 350px; height: 350px; background: var(--acento); top: 5%; left: 10%; animation-duration: 9s; }
-        .orb-2 { width: 280px; height: 280px; background: var(--acento-aux2); bottom: 10%; right: 5%; animation-duration: 11s; animation-delay: -2s; }
-        .orb-3 { width: 220px; height: 220px; background: var(--acento-aux1); top: 50%; left: 50%; animation-duration: 7s; animation-delay: -4s; }
-        .orb-4 { width: 250px; height: 250px; background: var(--acento); bottom: 30%; left: -5%; animation-duration: 10s; animation-delay: -6s; }
+        .orb-1 { width: 400px; height: 400px; background: var(--acento); top: -5%; left: 0%; animation-duration: 10s; }
+        .orb-2 { width: 300px; height: 300px; background: var(--acento-aux2); bottom: 5%; right: -5%; animation-duration: 12s; animation-delay: -3s; }
+        .orb-3 { width: 250px; height: 250px; background: var(--acento-aux1); top: 40%; left: 60%; animation-duration: 8s; animation-delay: -5s; }
+        .orb-4 { width: 320px; height: 320px; background: var(--acento); bottom: 20%; left: -10%; animation-duration: 11s; animation-delay: -7s; }
 
         @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(60px, -40px) scale(1.1); }
-            50% { transform: translate(-40px, 60px) scale(0.9); }
-            75% { transform: translate(-70px, -30px) scale(1.05); }
+            33% { transform: translate(80px, -50px) scale(1.1); }
+            66% { transform: translate(-60px, 80px) scale(0.9); }
             100% { transform: translate(0, 0) scale(1); }
         }
 
@@ -69,63 +76,73 @@ v12.1
             overflow-y: auto; padding: 20px; z-index: 10;
         }
 
-        /* --- LIQUID GLASS --- */
+        /* --- EXTREME LIQUID GLASS --- */
         .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 28px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            padding: 40px 30px;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            flex-shrink: 0;
-            animation: springIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+            
+            /* Aumentamos el desenfoque a 40px y saturamos los colores al 200% para ese efecto Apple vibrante */
+            backdrop-filter: blur(40px) saturate(200%); 
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            
+            /* Biselado de luz ultrafino */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            
+            border-radius: 32px;
+            /* Sombra ultra profunda para flotabilidad */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.1);
+            padding: 45px 35px;
+            text-align: center; width: 100%; max-width: 420px; flex-shrink: 0;
+            animation: springIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
             opacity: 0;
         }
 
         @keyframes springIn {
-            0% { opacity: 0; transform: scale(0.8) translateY(30px); }
+            0% { opacity: 0; transform: scale(0.85) translateY(40px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         /* --- LOGO --- */
         .logo-img {
-            max-width: 200px; width: 100%; height: auto;
-            margin: 0 auto 20px auto; display: block;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+            max-width: 220px; width: 100%; height: auto;
+            margin: 0 auto 25px auto; display: block;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));
         }
 
+        /* Fuente ligera para las descripciones */
         .hero-description {
-            margin-bottom: 25px; font-size: 15px; line-height: 1.5;
-            color: rgba(248, 248, 250, 0.9);
+            margin-bottom: 30px; font-size: 16px; line-height: 1.5;
+            color: rgba(248, 248, 250, 0.85); font-weight: 300;
         }
 
         /* --- BOTONES --- */
         .btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
-            color: var(--blanco);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 15px 24px; border-radius: 50px;
-            font-size: 16px; font-weight: 600; cursor: pointer;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.04) 100%);
+            color: var(--blanco); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px; border-radius: 50px;
+            font-size: 16px; font-weight: 800; /* Fuente Heavy */
+            letter-spacing: 0.5px; cursor: pointer;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             width: 100%;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         .btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
             transform: scale(1.03); 
+            box-shadow: 0 12px 25px rgba(0,0,0,0.25);
         }
 
         .btn:active { transform: scale(0.95); transition: all 0.1s; }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--acento) 0%, #2b087a 100%);
-            border: none; margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255,255,255,0.3);
+            margin-top: 25px;
+            box-shadow: 0 10px 25px rgba(58, 12, 163, 0.4);
         }
 
         .btn-primary:hover { background: linear-gradient(135deg, #4a15c3 0%, var(--acento) 100%); }
@@ -133,41 +150,34 @@ v12.1
         /* --- VENTANA MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 10, 0.4);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            background: rgba(5, 5, 5, 0.5);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             display: flex; justify-content: center; align-items: center;
             z-index: 100; opacity: 0; visibility: hidden;
             transition: opacity 0.4s ease, visibility 0.4s ease; padding: 20px;
         }
-
         .modal-overlay.active { opacity: 1; visibility: visible; }
 
         .modal-content {
             transform: scale(0.8) translateY(30px); opacity: 0;
-            width: 100%; max-width: 400px;
+            width: 100%; max-width: 420px;
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
         }
-
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
 
-        /* --- BOTÓN X (CERRAR) --- */
+        /* --- BOTÓN X CERRAR --- */
         .close-btn {
             position: absolute; top: 15px; right: 15px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            width: 32px; height: 32px; border-radius: 50%;
+            width: 34px; height: 34px; border-radius: 50%;
             cursor: pointer; display: flex; justify-content: center; align-items: center;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
             z-index: 10;
         }
-
         .close-btn:hover { transform: scale(1.15); background: rgba(255, 255, 255, 0.2); }
 
-        .x-icon {
-            position: relative; width: 12px; height: 12px;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
+        .x-icon { position: relative; width: 12px; height: 12px; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .x-icon::before, .x-icon::after {
             content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px;
             background: #fff; border-radius: 2px;
@@ -180,84 +190,69 @@ v12.1
 
         /* --- INPUT --- */
         .input-code {
-            width: 100%; padding: 16px; border-radius: 14px;
-            background: rgba(0, 0, 0, 0.3);
+            width: 100%; padding: 18px; border-radius: 16px;
+            background: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--blanco); font-size: 16px; text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.6);
+            color: var(--blanco); font-size: 18px; text-align: center;
             outline: none; margin-top: 15px;
-            transition: all 0.3s ease; letter-spacing: 1px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease; letter-spacing: 2px;
+            font-weight: 300; /* Fuente Nexa ligera */
+            box-shadow: inset 0 3px 10px rgba(0,0,0,0.4);
         }
-
         .input-code:focus {
-            background: rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2), 0 0 15px rgba(58, 12, 163, 0.4);
+            background: rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 3px 10px rgba(0,0,0,0.4), 0 0 20px rgba(58, 12, 163, 0.5);
         }
 
         /* --- LOADER Y ESTADOS --- */
-        .loader-container { display: none; flex-direction: column; align-items: center; margin-top: 20px; animation: fadeIn 0.4s ease; }
+        .loader-container { display: none; flex-direction: column; align-items: center; margin-top: 25px; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .spinner {
-            width: 45px; height: 45px;
-            border: 3px solid rgba(255, 255, 255, 0.05); border-top: 3px solid var(--acento);
-            border-radius: 50%; margin-bottom: 15px;
+            width: 50px; height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.05); border-top: 4px solid var(--acento);
+            border-radius: 50%; margin-bottom: 20px;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .status-msg { font-size: 15px; margin-bottom: 15px; text-align: center; font-weight: 500; transition: color 0.3s ease; }
+        .status-msg { font-size: 16px; margin-bottom: 15px; text-align: center; font-weight: 300; transition: all 0.3s ease; }
 
-        /* --- ANIMACIÓN ERROR (X) --- */
-        .animated-error-x {
-            position: relative; width: 50px; height: 50px;
-            margin-bottom: 10px; display: none;
-        }
-        .error-line {
-            position: absolute; top: 50%; left: 10%; width: 80%; height: 4px; border-radius: 4px;
-            background-color: #ef233c; opacity: 0; box-shadow: 0 0 15px rgba(239, 35, 60, 0.5);
-        }
-        .animated-error-x.show-error .line-left { animation: drawXLeft 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .animated-error-x.show-error .line-right { animation: drawXRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: 0.1s; }
-
-        @keyframes drawXLeft { 0% { opacity: 0; transform: translateY(-50%) rotate(0deg) scaleX(0); } 100% { opacity: 1; transform: translateY(-50%) rotate(45deg) scaleX(1); } }
-        @keyframes drawXRight { 0% { opacity: 0; transform: translateY(-50%) rotate(0deg) scaleX(0); } 100% { opacity: 1; transform: translateY(-50%) rotate(-45deg) scaleX(1); } }
-
-        /* --- ANIMACIÓN ÉXITO (CHECK) --- */
-        .animated-success-check {
-            position: relative; width: 50px; height: 50px;
-            margin-bottom: 10px; display: none;
-        }
-        .check-line {
-            position: absolute; height: 4px; border-radius: 4px;
-            background-color: var(--exito); opacity: 0; 
-            box-shadow: 0 0 15px rgba(6, 214, 160, 0.5);
-        }
-        
-        /* Ajuste preciso de los ángulos y posiciones para que conecten perfecto */
-        .check-short { width: 18px; top: 52%; left: 16%; transform-origin: left center; }
-        .check-long { width: 34px; top: 76%; left: 39%; transform-origin: left center; }
-
-        .animated-success-check.show-success .check-short {
-            animation: drawCheckShort 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        .animated-success-check.show-success .check-long {
-            animation: drawCheckLong 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            animation-delay: 0.2s; /* Comienza justo cuando termina el corto */
+        /* --- SVGs ANIMADOS (¡LÍNEA CONTINUA PERFECTA!) --- */
+        .icon-svg {
+            width: 65px; height: 65px;
+            display: none; margin-bottom: 15px;
         }
 
-        @keyframes drawCheckShort {
-            0% { opacity: 0; transform: rotate(45deg) scaleX(0); }
-            100% { opacity: 1; transform: rotate(45deg) scaleX(1); }
+        /* Vector para el Check (Éxito) */
+        .success-svg { filter: drop-shadow(0 0 12px rgba(6, 214, 160, 0.6)); }
+        .success-path {
+            stroke: var(--exito); stroke-width: 4;
+            stroke-linecap: round; stroke-linejoin: round;
+            /* Longitud total del trazo SVG */
+            stroke-dasharray: 60; stroke-dashoffset: 60; 
         }
-        @keyframes drawCheckLong {
-            0% { opacity: 0; transform: rotate(-55deg) scaleX(0); }
-            100% { opacity: 1; transform: rotate(-55deg) scaleX(1); }
+        .success-svg.show-icon .success-path {
+            /* Al animar el offset a 0, se dibuja fluidamente como un solo trazo */
+            animation: drawContinuous 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
+
+        /* Vector para la X (Error) */
+        .error-svg { filter: drop-shadow(0 0 12px rgba(239, 35, 60, 0.6)); }
+        .error-path {
+            stroke: #ef233c; stroke-width: 4; stroke-linecap: round;
+            stroke-dasharray: 40; stroke-dashoffset: 40;
+        }
+        .error-svg.show-icon .path-1 { animation: drawContinuous 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .error-svg.show-icon .path-2 { animation: drawContinuous 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards; }
+
+        /* Animación mágica de dibujo */
+        @keyframes drawContinuous { 100% { stroke-dashoffset: 0; } }
 
         @media (max-width: 380px) {
-            .glass-card { padding: 30px 20px; }
-            .logo-img { max-width: 160px; }
+            .glass-card { padding: 35px 25px; }
+            .logo-img { max-width: 180px; }
         }
     </style>
 </head>
@@ -272,7 +267,7 @@ v12.1
 
     <div class="content-wrapper">
         <div class="glass-card">
-            <!-- AQUÍ VA TU LOGO -->
+            <!-- RUTAS ACTUALIZADAS PARA TU CARPETA ASSETS -->
             <img src="assets/dosa-cloud.png" alt="Dos A Cloud" class="logo-img">
             
             <p class="hero-description">Accede a tu galería privada ingresando tu código de evento.</p>
@@ -288,8 +283,8 @@ v12.1
             </button>
             
             <div id="view-input">
-                <h2 style="font-size: 22px; margin-bottom: 5px; font-weight: 600;">Buscar Galería</h2>
-                <p style="font-size: 14px; opacity: 0.8;">Ingresa el código proporcionado</p>
+                <h2 style="font-size: 26px; margin-bottom: 5px; font-weight: 800;">Buscar Galería</h2>
+                <p style="font-size: 14px; opacity: 0.7; font-weight: 300;">Ingresa el código proporcionado</p>
                 <input type="text" id="codigoInput" class="input-code" placeholder="Ej. BODA2026" autocomplete="off">
                 <button class="btn btn-primary" onclick="buscarCodigo()">Buscar código</button>
             </div>
@@ -297,17 +292,16 @@ v12.1
             <div id="view-status" class="loader-container">
                 <div id="spinner" class="spinner"></div>
                 
-                <!-- ICONO ERROR ANIMADO -->
-                <div id="error-icon" class="animated-error-x">
-                    <div class="error-line line-left"></div>
-                    <div class="error-line line-right"></div>
-                </div>
+                <!-- SVG CONTINUO ERROR -->
+                <svg class="icon-svg error-svg" id="error-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <path class="error-path path-1" fill="none" d="M15,15 l20,20" />
+                    <path class="error-path path-2" fill="none" d="M35,15 l-20,20" />
+                </svg>
 
-                <!-- ICONO ÉXITO (CHECK) ANIMADO -->
-                <div id="success-icon" class="animated-success-check">
-                    <div class="check-line check-short"></div>
-                    <div class="check-line check-long"></div>
-                </div>
+                <!-- SVG CONTINUO CHECK (Línea sin cortes) -->
+                <svg class="icon-svg success-svg" id="success-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <path class="success-path" fill="none" d="M13,26 l8,9 l16,-18" />
+                </svg>
 
                 <p id="status-text" class="status-msg">Buscando código en la nube...</p>
                 <button id="btn-retry" class="btn btn-primary" style="display: none;" onclick="resetModal()">Reintentar</button>
@@ -338,9 +332,7 @@ v12.1
             closeBtn.classList.add('is-clicked');
             setTimeout(() => {
                 modal.classList.remove('active');
-                setTimeout(() => {
-                    closeBtn.classList.remove('is-clicked');
-                }, 400); 
+                setTimeout(() => closeBtn.classList.remove('is-clicked'), 400); 
             }, 350); 
         }
 
@@ -351,15 +343,16 @@ v12.1
             
             spinner.style.display = 'block';
             
-            // Reiniciar Error
+            // Reiniciar SVGs
             errorIcon.style.display = 'none';
-            errorIcon.classList.remove('show-error');
+            errorIcon.classList.remove('show-icon');
             
-            // Reiniciar Éxito y color del texto
             successIcon.style.display = 'none';
-            successIcon.classList.remove('show-success');
+            successIcon.classList.remove('show-icon');
+            
             statusText.style.color = ''; 
             statusText.style.textShadow = '';
+            statusText.style.fontWeight = '300';
 
             btnRetry.style.display = 'none';
             statusText.innerText = 'Buscando código en la nube...';
@@ -368,21 +361,19 @@ v12.1
         function mostrarError(mensaje) {
             spinner.style.display = 'none';
             errorIcon.style.display = 'block';
-            setTimeout(() => errorIcon.classList.add('show-error'), 10);
+            setTimeout(() => errorIcon.classList.add('show-icon'), 10);
             statusText.innerText = mensaje;
             btnRetry.style.display = 'block';
         }
 
         function mostrarExito(mensaje) {
             spinner.style.display = 'none';
-            
-            // Mostrar y activar la animación del check
             successIcon.style.display = 'block';
-            setTimeout(() => successIcon.classList.add('show-success'), 10);
+            setTimeout(() => successIcon.classList.add('show-icon'), 10);
             
-            // Le damos un toque verde brillante al texto también
             statusText.innerText = mensaje;
             statusText.style.color = 'var(--exito)';
+            statusText.style.fontWeight = '800'; // Usa Nexa Heavy para el éxito
             statusText.style.textShadow = '0 0 10px rgba(6, 214, 160, 0.4)';
         }
 
@@ -408,13 +399,8 @@ v12.1
                 .then(data => {
                     setTimeout(() => {
                         if (data[codigo]) {
-                            // Ejecutamos la función de éxito y animación
                             mostrarExito('¡Código encontrado! Redirigiendo...');
-                            
-                            // Damos tiempo suficiente (1.5s) para que el usuario disfrute la animación
-                            setTimeout(() => {
-                                window.location.href = data[codigo];
-                            }, 1500);
+                            setTimeout(() => window.location.href = data[codigo], 1600);
                         } else {
                             mostrarError('No se encontró el código de evento.');
                         }
@@ -422,9 +408,7 @@ v12.1
                 })
                 .catch(error => {
                     console.error('Error al cargar codigos.json:', error);
-                    setTimeout(() => {
-                        mostrarError('Error de red. Revisa tu conexión.');
-                    }, 1500);
+                    setTimeout(() => mostrarError('Error de red. Revisa tu conexión.'), 1500);
                 });
         }
 
