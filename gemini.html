@@ -1,4 +1,4 @@
-v10
+v11
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,7 +6,7 @@ v10
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dos A Cloud | Descarga tus fotos</title>
     
-    <!-- ICONO DE PÁGINA AÑADIDO -->
+    <!-- ICONO DE PÁGINA (FAVICON) -->
     <link rel="icon" type="image/png" href="assets/dosa-icon.png">
 
     <style>
@@ -17,7 +17,7 @@ v10
             --acento: #3a0ca3; 
             --acento-aux1: #4361ee;
             --acento-aux2: #7209b7;
-            --exito: #00e676; 
+            --exito: #00e676; /* Verde puro sin resplandores */
         }
 
         * {
@@ -240,7 +240,7 @@ v10
         @keyframes drawXLeft { 0% { opacity: 0; transform: translateY(-50%) rotate(0deg) scaleX(0); } 100% { opacity: 1; transform: translateY(-50%) rotate(45deg) scaleX(1); } }
         @keyframes drawXRight { 0% { opacity: 0; transform: translateY(-50%) rotate(0deg) scaleX(0); } 100% { opacity: 1; transform: translateY(-50%) rotate(-45deg) scaleX(1); } }
 
-        /* --- ANIMACIÓN CHECK DE ÉXITO (MODIFICADA: SIN FONDO Y MÁS FLUIDA) --- */
+        /* --- ANIMACIÓN CHECK DE ÉXITO FÍSICO (2 TRAZOS SEPARADOS) --- */
         .animated-check-svg {
             width: 60px;
             height: 60px;
@@ -248,37 +248,45 @@ v10
             display: none; 
         }
 
-        .check-path {
+        .check-short, .check-long {
             stroke: var(--exito);
             stroke-width: 4.5;
             stroke-linecap: round;
             stroke-linejoin: round;
-            stroke-dasharray: 50;  /* Longitud total de la línea */
-            stroke-dashoffset: 50; /* Comienza oculta */
-            /* Se eliminó el 'filter: drop-shadow' para quitar el fondo verde */
+            fill: none;
+            /* Cero filtros, sombras o fondos para mantenerlo limpio */
+        }
+
+        /* Configuramos el largo exacto de cada línea para animarlas por separado */
+        .check-short {
+            stroke-dasharray: 15;
+            stroke-dashoffset: 15;
+        }
+        .check-long {
+            stroke-dasharray: 30;
+            stroke-dashoffset: 30;
         }
 
         /* 
-           Se modificaron los keyframes para que baje rápido (0% a 35%),
-           se ralentice en la esquina con un ease-out, y luego suba la cola larga
-           suavemente (35% a 100%).
+           Aquí ocurre la magia: 
+           1. La pata corta arranca rápido y frena (ease-out) al llegar a la esquina.
+           2. La pata larga espera a que termine la corta (delay 0.25s) y arranca.
         */
-        .animated-check-svg.show-success .check-path {
-            animation: drawCheck 0.7s forwards;
+        .animated-check-svg.show-success .check-short {
+            animation: drawShort 0.25s cubic-bezier(0.0, 0.0, 0.2, 1) forwards;
+        }
+        .animated-check-svg.show-success .check-long {
+            animation: drawLong 0.35s cubic-bezier(0.0, 0.0, 0.2, 1) forwards;
+            animation-delay: 0.23s; /* Leve traslape para que se sienta continuo */
         }
 
-        @keyframes drawCheck {
-            0% { 
-                stroke-dashoffset: 50; 
-                animation-timing-function: ease-in; 
-            }
-            35% { 
-                stroke-dashoffset: 35; /* Llega a la esquina rápido */
-                animation-timing-function: ease-out; /* Comienza a desacelerar */
-            }
-            100% { 
-                stroke-dashoffset: 0; /* Termina el trazo largo suavemente */
-            }
+        @keyframes drawShort {
+            0% { stroke-dashoffset: 15; }
+            100% { stroke-dashoffset: 0; }
+        }
+        @keyframes drawLong {
+            0% { stroke-dashoffset: 30; }
+            100% { stroke-dashoffset: 0; }
         }
 
         @media (max-width: 380px) {
@@ -322,15 +330,15 @@ v10
             <div id="view-status" class="loader-container">
                 <div id="spinner" class="spinner"></div>
                 
-                <!-- ICONO DE ERROR -->
                 <div id="error-icon" class="animated-error-x">
                     <div class="error-line line-left"></div>
                     <div class="error-line line-right"></div>
                 </div>
                 
-                <!-- ICONO DE ÉXITO ANIMADO MEJORADO -->
+                <!-- SVG SEPARADO EN DOS LÍNEAS PARA CONTROLAR LA VELOCIDAD DE LA ESQUINA -->
                 <svg id="success-icon" class="animated-check-svg" viewBox="0 0 50 50">
-                    <path class="check-path" fill="none" d="M12 25 L 21 34 L 38 15" />
+                    <path class="check-short" d="M14 26 L22 34" />
+                    <path class="check-long" d="M22 34 L38 16" />
                 </svg>
 
                 <p id="status-text" class="status-msg">Buscando código en la nube...</p>
@@ -414,7 +422,6 @@ v10
             statusText.innerText = mensaje;
             btnRetry.style.display = 'none';
             
-            // Tiempo ajustado para apreciar bien la animación
             setTimeout(() => {
                 window.location.href = urlRedirect;
             }, 1600);
