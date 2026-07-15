@@ -1,18 +1,17 @@
-v15
+<!-- v1.4 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dos A Cloud | Descarga tus fotos</title>
-    <!-- Tu icono oficial -->
     <link rel="icon" type="image/png" href="assets/dosa-icon.png">
 
     <style>
-        /* --- VARIABLES DE COLOR --- */
+        /* --- VARIABLES --- */
         :root {
             --blanco: #f8f8fa;
-            --negro: #121212;
+            --negro: #000000; /* Fondo ultra negro para resaltar el cristal */
             --acento: #3a0ca3; 
             --acento-aux1: #4361ee;
             --acento-aux2: #7209b7;
@@ -31,28 +30,27 @@ v15
             height: 100vh; width: 100vw; overflow: hidden; position: relative;
         }
 
-        /* --- FONDO DE ORBES --- */
+        /* --- FONDO DE ORBES OPTIMIZADO PARA MÓVIL Y PC --- */
         .animated-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050505; z-index: 0;
+            background: #020202; z-index: 0;
         }
 
         .orb {
             position: absolute; border-radius: 50%;
-            filter: blur(70px);
-            animation: floatOrb 8s infinite ease-in-out alternate;
+            filter: blur(60px); /* Desenfoque ajustado para no crashear móviles */
+            animation: floatOrb 10s infinite ease-in-out alternate;
         }
 
-        .orb-1 { width: 400px; height: 400px; background: var(--acento); top: -5%; left: 0%; animation-duration: 10s; }
-        .orb-2 { width: 300px; height: 300px; background: var(--acento-aux2); bottom: 5%; right: -5%; animation-duration: 12s; animation-delay: -3s; }
-        .orb-3 { width: 250px; height: 250px; background: var(--acento-aux1); top: 40%; left: 60%; animation-duration: 8s; animation-delay: -5s; }
-        .orb-4 { width: 320px; height: 320px; background: var(--acento); bottom: 20%; left: -10%; animation-duration: 11s; animation-delay: -7s; }
-
+        /* Tamaños y posiciones responsivas usando vh/vw para que se vean en móvil */
+        .orb-1 { width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: var(--acento); top: 0%; left: 10%; animation-duration: 12s; }
+        .orb-2 { width: 40vw; height: 40vw; max-width: 300px; max-height: 300px; background: var(--acento-aux2); bottom: 10%; right: 0%; animation-duration: 14s; animation-delay: -3s; }
+        .orb-3 { width: 35vw; height: 35vw; max-width: 250px; max-height: 250px; background: var(--acento-aux1); top: 40%; left: 50%; animation-duration: 9s; animation-delay: -5s; }
+        
         @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(80px, -50px) scale(1.1); }
-            66% { transform: translate(-60px, 80px) scale(0.9); }
-            100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -40px) scale(1.1); }
+            100% { transform: translate(-30px, 30px) scale(0.9); }
         }
 
         /* --- CONTENEDOR PRINCIPAL --- */
@@ -62,94 +60,99 @@ v15
             overflow-y: auto; padding: 20px; z-index: 10;
         }
 
-        /* --- ULTRA LIQUID GLASS (REFRACCIÓN) --- */
+        /* --- LIQUID GLASS REFINADO (Evita el bug plano en Android) --- */
         .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
-            backdrop-filter: blur(40px) saturate(200%); 
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            /* Capa base muy transparente */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
             
-            border-top: 1.5px solid rgba(255, 255, 255, 0.4);
-            border-left: 1.5px solid rgba(255, 255, 255, 0.25);
+            /* Saturación bajada a 120% y blur a 30px para asegurar renderizado en móvil */
+            backdrop-filter: blur(30px) saturate(120%); 
+            -webkit-backdrop-filter: blur(30px) saturate(120%);
+            
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
             border-right: 1px solid rgba(255, 255, 255, 0.02);
             border-bottom: 1px solid rgba(255, 255, 255, 0.02);
             
             border-radius: 36px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 4px 6px rgba(255, 255, 255, 0.2), inset 0 -4px 6px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.1);
                 
-            padding: 45px 35px;
+            padding: 45px 30px;
             text-align: center; width: 100%; max-width: 420px; flex-shrink: 0;
-            opacity: 0;
-            display: none; /* Oculto por defecto para manejar las ventanas por JS */
+            display: none; 
         }
 
-        /* --- ANIMACIONES DE VENTANAS FÍSICAS --- */
+        /* --- NUEVA ANIMACIÓN DE ENTRADA (SOLO CRECE, NO SUBE) --- */
+        #main-card { 
+            display: block; 
+            opacity: 0;
+            animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
+        }
+
+        @keyframes scaleIn {
+            0% { opacity: 0; transform: scale(0.6); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- ANIMACIONES DE VENTANAS DEL MODAL --- */
         .window-enter {
             display: block;
-            animation: springIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         .window-exit {
-            animation: springOut 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: scaleOut 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        @keyframes springIn {
-            0% { opacity: 0; transform: scale(0.85) translateY(30px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes scaleOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.8); }
         }
-
-        @keyframes springOut {
-            0% { opacity: 1; transform: scale(1) translateY(0); }
-            100% { opacity: 0; transform: scale(0.9) translateY(20px); }
-        }
-
-        /* Mostrar la tarjeta principal de inicio */
-        #main-card { display: block; opacity: 1; animation: springIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
         /* --- LOGO Y TEXTOS --- */
-        .logo-img { max-width: 220px; width: 100%; height: auto; margin: 0 auto 25px auto; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4)); }
-        .hero-description { margin-bottom: 30px; font-size: 16px; line-height: 1.5; color: rgba(248, 248, 250, 0.85); font-weight: 400; letter-spacing: -0.2px; }
+        .logo-img { max-width: 220px; width: 100%; height: auto; margin: 0 auto 25px auto; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); }
+        .hero-description { margin-bottom: 30px; font-size: 16px; line-height: 1.5; color: rgba(248, 248, 250, 0.85); font-weight: 400; }
 
         /* --- BOTONES --- */
         .btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.04) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
             color: var(--blanco); 
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom: 1px solid transparent; border-right: 1px solid transparent;
             padding: 16px 24px; border-radius: 50px;
-            font-size: 17px; font-weight: 600; letter-spacing: -0.3px; cursor: pointer;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            width: 100%; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            font-size: 17px; font-weight: 600; cursor: pointer;
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            width: 100%; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
-        .btn:hover { background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%); transform: scale(1.03); box-shadow: 0 12px 25px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255, 255, 255, 0.2); }
+        .btn:hover { background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%); transform: scale(1.03); }
         .btn:active { transform: scale(0.96); transition: all 0.1s; }
-        .btn-primary { background: linear-gradient(135deg, var(--acento) 0%, #2b087a 100%); border-top: 1px solid rgba(255,255,255,0.4); margin-top: 25px; box-shadow: 0 10px 25px rgba(58, 12, 163, 0.4); }
+        .btn-primary { background: linear-gradient(135deg, var(--acento) 0%, #2b087a 100%); border-top: 1px solid rgba(255,255,255,0.2); margin-top: 25px; box-shadow: 0 10px 25px rgba(58, 12, 163, 0.4); }
         .btn-primary:hover { background: linear-gradient(135deg, #4a15c3 0%, var(--acento) 100%); }
 
         /* --- FONDO MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 5, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             display: flex; justify-content: center; align-items: center;
             z-index: 100; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; padding: 20px;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
 
-        /* Contenedor que agrupa las ventanas independientes */
         .modal-windows-container { position: relative; width: 100%; max-width: 420px; display: flex; justify-content: center; align-items: center; }
 
-        /* --- BOTÓN X CERRAR (Físico a la ventana) --- */
+        /* --- BOTÓN X CERRAR --- */
         .close-btn {
             position: absolute; top: 20px; right: 20px;
-            background: rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-left: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid transparent; border-right: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1);
             width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease; z-index: 10;
+            transition: transform 0.3s ease, background-color 0.2s ease; z-index: 10;
         }
         .close-btn:hover { transform: scale(1.15); background: rgba(255, 255, 255, 0.2); }
         .close-btn.is-clicked { background-color: var(--error) !important; transform: scale(0.85) !important; }
 
-        .x-icon { position: relative; width: 14px; height: 14px; transition: transform 0.4s ease; }
+        .x-icon { position: relative; width: 14px; height: 14px; transition: transform 0.3s ease; }
         .x-icon::before, .x-icon::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px; background: #fff; border-radius: 2px; }
         .x-icon::before { transform: translateY(-50%) rotate(45deg); }
         .x-icon::after { transform: translateY(-50%) rotate(-45deg); }
@@ -157,12 +160,12 @@ v15
 
         /* --- INPUT --- */
         .input-code {
-            width: 100%; padding: 18px; border-radius: 18px; background: rgba(0, 0, 0, 0.35);
-            border-top: 1px solid rgba(0, 0, 0, 0.8); border-left: 1px solid rgba(0, 0, 0, 0.5); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%; padding: 18px; border-radius: 18px; background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid rgba(0, 0, 0, 0.6); border-left: 1px solid rgba(0, 0, 0, 0.4); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             color: var(--blanco); font-size: 18px; text-align: center; outline: none; margin-top: 15px;
-            transition: all 0.3s ease; letter-spacing: 2px; font-weight: 500; box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);
+            transition: all 0.3s ease; letter-spacing: 2px; font-weight: 500; box-shadow: inset 0 4px 12px rgba(0,0,0,0.4);
         }
-        .input-code:focus { background: rgba(0, 0, 0, 0.5); border-bottom: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(58, 12, 163, 0.5); }
+        .input-code:focus { background: rgba(0, 0, 0, 0.6); border-bottom: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 4px 12px rgba(0,0,0,0.6), 0 0 15px rgba(58, 12, 163, 0.5); }
 
         /* --- LOADER --- */
         .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;}
@@ -171,30 +174,43 @@ v15
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .status-msg { font-size: 18px; margin-bottom: 15px; text-align: center; font-weight: 500; letter-spacing: -0.3px; transition: all 0.3s ease; }
+        .status-msg { font-size: 18px; margin-bottom: 15px; text-align: center; font-weight: 500; transition: all 0.3s ease; }
 
-        /* --- ICONOS SVG PERFECTOS (Cero uniones rotas) --- */
-        .icon-svg { width: 60px; height: 60px; display: none; margin-bottom: 20px; }
+        /* =========================================
+           REGRESO DEL CHECK Y ERROR EN CSS PURO
+           ========================================= */
+        
+        /* Contenedores base */
+        .icon-css-container { position: relative; width: 60px; height: 60px; margin-bottom: 20px; display: none; }
 
-        /* Check de Éxito */
-        .success-svg { filter: drop-shadow(0 0 15px rgba(6, 214, 160, 0.5)); }
-        .success-path {
-            stroke: var(--exito); stroke-width: 5;
-            stroke-linecap: round; stroke-linejoin: round; /* <--- Esto arregla la esquina cortada */
-            stroke-dasharray: 60; stroke-dashoffset: 60; 
+        /* --- ANIMACIÓN ERROR X (CSS) --- */
+        .error-leg {
+            position: absolute; height: 5px; border-radius: 5px;
+            background-color: var(--error); opacity: 0; box-shadow: 0 0 15px rgba(239, 35, 60, 0.5);
+            transform-origin: center; width: 50px; top: 45%; left: 8%;
         }
-        .show-icon .success-path { animation: drawSVG 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .icon-css-container.show-error .error-left { animation: drawXLeft 0.3s ease-out forwards; }
+        .icon-css-container.show-error .error-right { animation: drawXRight 0.3s ease-out forwards; animation-delay: 0.15s; }
 
-        /* X de Error */
-        .error-svg { filter: drop-shadow(0 0 15px rgba(239, 35, 60, 0.5)); }
-        .error-path {
-            stroke: var(--error); stroke-width: 5; stroke-linecap: round;
-            stroke-dasharray: 40; stroke-dashoffset: 40;
+        @keyframes drawXLeft { 0% { opacity: 0; transform: rotate(45deg) scaleX(0); } 100% { opacity: 1; transform: rotate(45deg) scaleX(1); } }
+        @keyframes drawXRight { 0% { opacity: 0; transform: rotate(-45deg) scaleX(0); } 100% { opacity: 1; transform: rotate(-45deg) scaleX(1); } }
+
+        /* --- ANIMACIÓN ÉXITO CHECK (CSS) --- */
+        .check-leg {
+            position: absolute; height: 5.5px; border-radius: 5px;
+            background-color: var(--exito); opacity: 0; 
+            box-shadow: 0 0 15px rgba(6, 214, 160, 0.5);
+            transform-origin: left center;
         }
-        .show-icon .path-1 { animation: drawSVG 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .show-icon .path-2 { animation: drawSVG 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards; }
+        /* Ángulos y posiciones exactas para igualar el GIF */
+        .check-short { width: 25px; top: 58%; left: 15%; transform: rotate(45deg); }
+        .check-long { width: 45px; top: 83%; left: 42%; transform: rotate(-50deg); }
 
-        @keyframes drawSVG { 100% { stroke-dashoffset: 0; } }
+        .icon-css-container.show-success .check-short { animation: drawCheckShort 0.2s ease-out forwards; }
+        .icon-css-container.show-success .check-long { animation: drawCheckLong 0.25s ease-out forwards; animation-delay: 0.2s; }
+
+        @keyframes drawCheckShort { 0% { opacity: 0; transform: rotate(45deg) scaleX(0); } 100% { opacity: 1; transform: rotate(45deg) scaleX(1); } }
+        @keyframes drawCheckLong { 0% { opacity: 0; transform: rotate(-50deg) scaleX(0); } 100% { opacity: 1; transform: rotate(-50deg) scaleX(1); } }
 
         @media (max-width: 380px) { .glass-card { padding: 35px 25px; } .logo-img { max-width: 180px; } }
     </style>
@@ -205,49 +221,47 @@ v15
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
-        <div class="orb orb-4"></div>
     </div>
 
     <div class="content-wrapper">
         <div class="glass-card" id="main-card">
-            <!-- RUTAS ACTUALIZADAS PARA TU CARPETA ASSETS -->
             <img src="assets/dosa-cloud.png" alt="Dos A Cloud" class="logo-img">
             <p class="hero-description">Accede a tu galería privada ingresando tu código de evento.</p>
             <button class="btn" onclick="openModal()">Insertar código</button>
         </div>
     </div>
 
-    <!-- EL MODAL Y SUS VENTANAS INDEPENDIENTES -->
     <div class="modal-overlay" id="modal">
         <div class="modal-windows-container">
             
-            <!-- VENTANA 1: INPUT DE CÓDIGO -->
+            <!-- VENTANA 1: INPUT -->
             <div class="glass-card" id="window-input"> 
                 <button class="close-btn" onclick="closeWindow('window-input')"><span class="x-icon"></span></button>
-                <h2 style="font-size: 26px; margin-bottom: 5px; font-weight: 700; letter-spacing: -0.5px;">Buscar Galería</h2>
-                <p style="font-size: 15px; opacity: 0.7; font-weight: 400;">Ingresa el código proporcionado</p>
+                <h2 style="font-size: 26px; margin-bottom: 5px; font-weight: 700;">Buscar Galería</h2>
+                <p style="font-size: 15px; opacity: 0.7;">Ingresa el código proporcionado</p>
                 <input type="text" id="codigoInput" class="input-code" placeholder="Ej. BODA2026" autocomplete="off">
                 <button class="btn btn-primary" onclick="buscarCodigo()">Buscar código</button>
             </div>
 
             <!-- VENTANA 2: ESTADO (CARGANDO / ERROR / ÉXITO) -->
+            <!-- Esta ventana está posicionada encima pero oculta -->
             <div class="glass-card" id="window-status" style="position: absolute;">
-                <!-- Esta ventana tiene su propia X en caso de error -->
                 <button class="close-btn" id="closeStatusBtn" style="display: none;" onclick="closeWindow('window-status')"><span class="x-icon"></span></button>
                 
                 <div class="loader-container">
                     <div id="spinner" class="spinner"></div>
                     
-                    <!-- SVG ERROR PERFECTO -->
-                    <svg class="icon-svg error-svg" id="error-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                        <path class="error-path path-1" fill="none" d="M16,16 l18,18" />
-                        <path class="error-path path-2" fill="none" d="M34,16 l-18,18" />
-                    </svg>
+                    <!-- CSS ERROR ANIMADO -->
+                    <div id="error-icon" class="icon-css-container">
+                        <div class="error-leg error-left"></div>
+                        <div class="error-leg error-right"></div>
+                    </div>
 
-                    <!-- SVG CHECK PERFECTO (CON ÁNGULO REDONDEADO) -->
-                    <svg class="icon-svg success-svg" id="success-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                        <path class="success-path" fill="none" d="M14,26 l7,7 l15,-15" />
-                    </svg>
+                    <!-- CSS CHECK ANIMADO (COMO EL GIF) -->
+                    <div id="success-icon" class="icon-css-container">
+                        <div class="check-leg check-short"></div>
+                        <div class="check-leg check-long"></div>
+                    </div>
 
                     <p id="status-text" class="status-msg">Buscando código en la nube...</p>
                     <button id="btn-retry" class="btn btn-primary" style="display: none; margin-top: 15px;" onclick="reintentarBusqueda()">Reintentar</button>
@@ -270,15 +284,12 @@ v15
         const btnRetry = document.getElementById('btn-retry');
         const closeStatusBtn = document.getElementById('closeStatusBtn');
 
-        // ABRE LA VENTANA 1
         function openModal() {
             modal.classList.add('active');
             
-            // Asegurar que la ventana de status esté oculta
             winStatus.style.display = 'none';
             winStatus.classList.remove('window-enter', 'window-exit');
             
-            // Mostrar ventana de input con animación
             winInput.style.display = 'block';
             winInput.classList.remove('window-exit');
             winInput.classList.add('window-enter');
@@ -287,7 +298,6 @@ v15
             setTimeout(() => codigoInput.focus(), 300);
         }
 
-        // CIERRA CUALQUIER VENTANA CON LA X
         function closeWindow(windowId) {
             const win = document.getElementById(windowId);
             const btnX = win.querySelector('.close-btn');
@@ -296,49 +306,51 @@ v15
             
             setTimeout(() => {
                 win.classList.remove('window-enter');
-                win.classList.add('window-exit'); // Animación de encoger
+                win.classList.add('window-exit'); 
                 
                 setTimeout(() => {
                     modal.classList.remove('active');
                     btnX.classList.remove('is-clicked');
                     win.style.display = 'none';
-                }, 400); // Espera a que termine la animación de salida
-            }, 300);
+                }, 300); 
+            }, 250);
         }
 
-        // TRANSICIÓN FÍSICA DE VENTANAS (A -> B)
+        // --- LÓGICA DE VENTANAS FÍSICAS INDEPENDIENTES ---
+        // Aquí ocurre la magia: la ventana actual se achica y desaparece, 
+        // y hasta que termina, la nueva ventana brinca hacia adelante.
         function swapWindows(winOut, winIn) {
             winOut.classList.remove('window-enter');
-            winOut.classList.add('window-exit');
+            winOut.classList.add('window-exit'); // Animación de salida (shrink)
             
             setTimeout(() => {
-                winOut.style.display = 'none';
+                winOut.style.display = 'none'; // Se oculta físicamente
                 
-                winIn.style.display = 'block';
+                winIn.style.display = 'block'; // Aparece la nueva
                 winIn.classList.remove('window-exit');
-                // Forzar repintado
-                void winIn.offsetWidth;
-                winIn.classList.add('window-enter');
-            }, 350); // Tiempo que tarda en desaparecer la primera ventana
+                void winIn.offsetWidth; // Forzamos el reflow del navegador
+                winIn.classList.add('window-enter'); // Animación de entrada (pop)
+            }, 300); // 300ms es lo que dura la animación de salida
         }
 
-        // REINTENTAR (DE STATUS A INPUT)
         function reintentarBusqueda() {
+            // Mandamos llamar el intercambio físico de Status -> Input
             swapWindows(winStatus, winInput);
+            
             setTimeout(() => {
                 codigoInput.value = '';
                 codigoInput.focus();
-            }, 400);
+            }, 350);
         }
 
         function resetStatusContent() {
             spinner.style.display = 'block';
             
             errorIcon.style.display = 'none';
-            errorIcon.classList.remove('show-icon');
+            errorIcon.classList.remove('show-error');
             
             successIcon.style.display = 'none';
-            successIcon.classList.remove('show-icon');
+            successIcon.classList.remove('show-success');
             
             statusText.style.color = ''; 
             statusText.style.textShadow = '';
@@ -353,18 +365,18 @@ v15
             spinner.style.display = 'none';
             
             errorIcon.style.display = 'block';
-            setTimeout(() => errorIcon.classList.add('show-icon'), 10);
+            setTimeout(() => errorIcon.classList.add('show-error'), 10);
             
             statusText.innerText = mensaje;
             btnRetry.style.display = 'block';
-            closeStatusBtn.style.display = 'flex'; // Mostramos la X de la ventana de estado
+            closeStatusBtn.style.display = 'flex'; 
         }
 
         function mostrarExito(mensaje) {
             spinner.style.display = 'none';
             
             successIcon.style.display = 'block';
-            setTimeout(() => successIcon.classList.add('show-icon'), 10);
+            setTimeout(() => successIcon.classList.add('show-success'), 10);
             
             statusText.innerText = mensaje;
             statusText.style.color = 'var(--exito)';
@@ -385,7 +397,7 @@ v15
             codigoInput.blur(); 
             resetStatusContent();
             
-            // Ejecutamos el intercambio físico de ventanas
+            // Intercambio físico de Input -> Status
             swapWindows(winInput, winStatus);
 
             fetch('codigos.json')
@@ -401,7 +413,7 @@ v15
                         } else {
                             mostrarError('No se encontró el código de evento.');
                         }
-                    }, 2400); // 2.4s totales (incluye el tiempo que tarda la ventana en girar)
+                    }, 2400); 
                 })
                 .catch(error => {
                     console.error('Error al cargar codigos.json:', error);
