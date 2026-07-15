@@ -1,4 +1,4 @@
-v14
+v15
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,7 +22,6 @@ v14
 
         * {
             margin: 0; padding: 0; box-sizing: border-box;
-            /* El stack de fuentes nativo de Apple (San Francisco) */
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
@@ -63,203 +62,141 @@ v14
             overflow-y: auto; padding: 20px; z-index: 10;
         }
 
-        /* --- ULTRA LIQUID GLASS (NUEVOS BORDES Y REFRACCIÓN) --- */
+        /* --- ULTRA LIQUID GLASS (REFRACCIÓN) --- */
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
             backdrop-filter: blur(40px) saturate(200%); 
             -webkit-backdrop-filter: blur(40px) saturate(200%);
             
-            /* Bisel exterior asimétrico simulando luz desde arriba a la izquierda */
             border-top: 1.5px solid rgba(255, 255, 255, 0.4);
             border-left: 1.5px solid rgba(255, 255, 255, 0.25);
             border-right: 1px solid rgba(255, 255, 255, 0.02);
             border-bottom: 1px solid rgba(255, 255, 255, 0.02);
             
             border-radius: 36px;
-            
-            /* Sombra múltiple: caída normal + brillos interiores simulando grosor del cristal */
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.5), 
-                inset 0 4px 6px rgba(255, 255, 255, 0.2), 
-                inset 0 -4px 6px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 4px 6px rgba(255, 255, 255, 0.2), inset 0 -4px 6px rgba(255, 255, 255, 0.05);
                 
             padding: 45px 35px;
             text-align: center; width: 100%; max-width: 420px; flex-shrink: 0;
-            animation: springIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
             opacity: 0;
+            display: none; /* Oculto por defecto para manejar las ventanas por JS */
+        }
+
+        /* --- ANIMACIONES DE VENTANAS FÍSICAS --- */
+        .window-enter {
+            display: block;
+            animation: springIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .window-exit {
+            animation: springOut 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         @keyframes springIn {
-            0% { opacity: 0; transform: scale(0.85) translateY(40px); }
+            0% { opacity: 0; transform: scale(0.85) translateY(30px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* --- LOGO --- */
-        .logo-img {
-            max-width: 220px; width: 100%; height: auto;
-            margin: 0 auto 25px auto; display: block;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));
+        @keyframes springOut {
+            0% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 0; transform: scale(0.9) translateY(20px); }
         }
 
-        .hero-description {
-            margin-bottom: 30px; font-size: 16px; line-height: 1.5;
-            color: rgba(248, 248, 250, 0.85); font-weight: 400; letter-spacing: -0.2px;
-        }
+        /* Mostrar la tarjeta principal de inicio */
+        #main-card { display: block; opacity: 1; animation: springIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        /* --- LOGO Y TEXTOS --- */
+        .logo-img { max-width: 220px; width: 100%; height: auto; margin: 0 auto 25px auto; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4)); }
+        .hero-description { margin-bottom: 30px; font-size: 16px; line-height: 1.5; color: rgba(248, 248, 250, 0.85); font-weight: 400; letter-spacing: -0.2px; }
 
         /* --- BOTONES --- */
         .btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.04) 100%);
             color: var(--blanco); 
-            
-            /* Mismo tratamiento de cristal para botones */
             border-top: 1px solid rgba(255, 255, 255, 0.3);
             border-left: 1px solid rgba(255, 255, 255, 0.15);
-            border-bottom: 1px solid transparent;
-            border-right: 1px solid transparent;
-            
+            border-bottom: 1px solid transparent; border-right: 1px solid transparent;
             padding: 16px 24px; border-radius: 50px;
             font-size: 17px; font-weight: 600; letter-spacing: -0.3px; cursor: pointer;
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            width: 100%;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 100%; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255, 255, 255, 0.1);
         }
-
-        .btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
-            transform: scale(1.03); 
-            box-shadow: 0 12px 25px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255, 255, 255, 0.2);
-        }
-
+        .btn:hover { background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%); transform: scale(1.03); box-shadow: 0 12px 25px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255, 255, 255, 0.2); }
         .btn:active { transform: scale(0.96); transition: all 0.1s; }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--acento) 0%, #2b087a 100%);
-            border-top: 1px solid rgba(255,255,255,0.4);
-            margin-top: 25px;
-            box-shadow: 0 10px 25px rgba(58, 12, 163, 0.4);
-        }
-
+        .btn-primary { background: linear-gradient(135deg, var(--acento) 0%, #2b087a 100%); border-top: 1px solid rgba(255,255,255,0.4); margin-top: 25px; box-shadow: 0 10px 25px rgba(58, 12, 163, 0.4); }
         .btn-primary:hover { background: linear-gradient(135deg, #4a15c3 0%, var(--acento) 100%); }
 
-        /* --- VENTANA MODAL --- */
+        /* --- FONDO MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 5, 0.4);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(5, 5, 5, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             display: flex; justify-content: center; align-items: center;
-            z-index: 100; opacity: 0; visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease; padding: 20px;
+            z-index: 100; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; padding: 20px;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
 
-        .modal-content {
-            transform: scale(0.85) translateY(30px); opacity: 0;
-            width: 100%; max-width: 420px;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-        }
-        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+        /* Contenedor que agrupa las ventanas independientes */
+        .modal-windows-container { position: relative; width: 100%; max-width: 420px; display: flex; justify-content: center; align-items: center; }
 
-        /* --- TRANSICIONES FLUIDAS ENTRE VISTAS --- */
-        .view-section {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        .view-hidden {
-            opacity: 0 !important;
-            transform: scale(0.95) !important;
-        }
-
-        /* --- BOTÓN X CERRAR --- */
+        /* --- BOTÓN X CERRAR (Físico a la ventana) --- */
         .close-btn {
             position: absolute; top: 20px; right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid transparent; border-right: 1px solid transparent;
-            width: 36px; height: 36px; border-radius: 50%;
-            cursor: pointer; display: flex; justify-content: center; align-items: center;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-left: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid transparent; border-right: 1px solid transparent;
+            width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease; z-index: 10;
         }
         .close-btn:hover { transform: scale(1.15); background: rgba(255, 255, 255, 0.2); }
         .close-btn.is-clicked { background-color: var(--error) !important; transform: scale(0.85) !important; }
 
         .x-icon { position: relative; width: 14px; height: 14px; transition: transform 0.4s ease; }
-        .x-icon::before, .x-icon::after {
-            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px;
-            background: #fff; border-radius: 2px;
-        }
+        .x-icon::before, .x-icon::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px; background: #fff; border-radius: 2px; }
         .x-icon::before { transform: translateY(-50%) rotate(45deg); }
         .x-icon::after { transform: translateY(-50%) rotate(-45deg); }
         .close-btn.is-clicked .x-icon { transform: rotate(180deg); }
 
         /* --- INPUT --- */
         .input-code {
-            width: 100%; padding: 18px; border-radius: 18px;
-            background: rgba(0, 0, 0, 0.35);
-            border-top: 1px solid rgba(0, 0, 0, 0.8);
-            border-left: 1px solid rgba(0, 0, 0, 0.5);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--blanco); font-size: 18px; text-align: center;
-            outline: none; margin-top: 15px;
-            transition: all 0.3s ease; letter-spacing: 2px;
-            font-weight: 500;
-            box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);
+            width: 100%; padding: 18px; border-radius: 18px; background: rgba(0, 0, 0, 0.35);
+            border-top: 1px solid rgba(0, 0, 0, 0.8); border-left: 1px solid rgba(0, 0, 0, 0.5); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--blanco); font-size: 18px; text-align: center; outline: none; margin-top: 15px;
+            transition: all 0.3s ease; letter-spacing: 2px; font-weight: 500; box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);
         }
-        .input-code:focus {
-            background: rgba(0, 0, 0, 0.5); border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: inset 0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(58, 12, 163, 0.5);
-        }
+        .input-code:focus { background: rgba(0, 0, 0, 0.5); border-bottom: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(58, 12, 163, 0.5); }
 
         /* --- LOADER --- */
-        .loader-container { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
+        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;}
         .spinner {
-            width: 50px; height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.05); border-top: 4px solid var(--acento);
-            border-radius: 50%; margin-bottom: 20px;
+            width: 55px; height: 55px; border: 4px solid rgba(255, 255, 255, 0.05); border-top: 4px solid var(--acento); border-radius: 50%; margin-bottom: 20px;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .status-msg { font-size: 17px; margin-bottom: 15px; text-align: center; font-weight: 400; letter-spacing: -0.3px; transition: all 0.3s ease; }
+        .status-msg { font-size: 18px; margin-bottom: 15px; text-align: center; font-weight: 500; letter-spacing: -0.3px; transition: all 0.3s ease; }
 
-        /* --- ANIMACIÓN ERROR X (PURO CSS) --- */
-        .animated-css-error { position: relative; width: 50px; height: 50px; margin-bottom: 15px; display: none; }
-        .error-leg {
-            position: absolute; height: 4.5px; border-radius: 4px;
-            background-color: var(--error); opacity: 0; box-shadow: 0 0 15px rgba(239, 35, 60, 0.5);
-            transform-origin: center; width: 45px; top: 45%; left: 5%;
+        /* --- ICONOS SVG PERFECTOS (Cero uniones rotas) --- */
+        .icon-svg { width: 60px; height: 60px; display: none; margin-bottom: 20px; }
+
+        /* Check de Éxito */
+        .success-svg { filter: drop-shadow(0 0 15px rgba(6, 214, 160, 0.5)); }
+        .success-path {
+            stroke: var(--exito); stroke-width: 5;
+            stroke-linecap: round; stroke-linejoin: round; /* <--- Esto arregla la esquina cortada */
+            stroke-dasharray: 60; stroke-dashoffset: 60; 
         }
-        .animated-css-error.show-error .error-left { animation: drawXLeft 0.3s ease-out forwards; }
-        .animated-css-error.show-error .error-right { animation: drawXRight 0.3s ease-out forwards; animation-delay: 0.15s; }
+        .show-icon .success-path { animation: drawSVG 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
-        @keyframes drawXLeft { 0% { opacity: 0; transform: rotate(45deg) scaleX(0); } 100% { opacity: 1; transform: rotate(45deg) scaleX(1); } }
-        @keyframes drawXRight { 0% { opacity: 0; transform: rotate(-45deg) scaleX(0); } 100% { opacity: 1; transform: rotate(-45deg) scaleX(1); } }
-
-        /* --- ANIMACIÓN ÉXITO CHECK (PURO CSS) --- */
-        .animated-css-check { position: relative; width: 50px; height: 50px; margin-bottom: 15px; display: none; }
-        .check-leg {
-            position: absolute; height: 5px; border-radius: 4px;
-            background-color: var(--exito); opacity: 0; 
-            box-shadow: 0 0 15px rgba(6, 214, 160, 0.5);
-            transform-origin: left center;
+        /* X de Error */
+        .error-svg { filter: drop-shadow(0 0 15px rgba(239, 35, 60, 0.5)); }
+        .error-path {
+            stroke: var(--error); stroke-width: 5; stroke-linecap: round;
+            stroke-dasharray: 40; stroke-dashoffset: 40;
         }
-        .check-short { width: 22px; top: 55%; left: 18%; }
-        .check-long { width: 38px; top: 78%; left: 42%; }
+        .show-icon .path-1 { animation: drawSVG 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .show-icon .path-2 { animation: drawSVG 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards; }
 
-        .animated-css-check.show-success .check-short { animation: drawCheckShort 0.2s ease-out forwards; }
-        .animated-css-check.show-success .check-long { animation: drawCheckLong 0.25s ease-out forwards; animation-delay: 0.15s; }
+        @keyframes drawSVG { 100% { stroke-dashoffset: 0; } }
 
-        @keyframes drawCheckShort { 0% { opacity: 0; transform: rotate(45deg) scaleX(0); } 100% { opacity: 1; transform: rotate(45deg) scaleX(1); } }
-        @keyframes drawCheckLong { 0% { opacity: 0; transform: rotate(-55deg) scaleX(0); } 100% { opacity: 1; transform: rotate(-55deg) scaleX(1); } }
-
-        @media (max-width: 380px) {
-            .glass-card { padding: 35px 25px; }
-            .logo-img { max-width: 180px; }
-        }
+        @media (max-width: 380px) { .glass-card { padding: 35px 25px; } .logo-img { max-width: 180px; } }
     </style>
 </head>
 <body>
@@ -272,46 +209,45 @@ v14
     </div>
 
     <div class="content-wrapper">
-        <div class="glass-card">
+        <div class="glass-card" id="main-card">
             <!-- RUTAS ACTUALIZADAS PARA TU CARPETA ASSETS -->
             <img src="assets/dosa-cloud.png" alt="Dos A Cloud" class="logo-img">
-            
             <p class="hero-description">Accede a tu galería privada ingresando tu código de evento.</p>
             <button class="btn" onclick="openModal()">Insertar código</button>
         </div>
     </div>
 
+    <!-- EL MODAL Y SUS VENTANAS INDEPENDIENTES -->
     <div class="modal-overlay" id="modal">
-        <div class="glass-card modal-content" style="animation: none; min-height: 320px; display: flex; flex-direction: column; justify-content: center;"> 
+        <div class="modal-windows-container">
             
-            <button class="close-btn" id="closeBtn" onclick="closeModalConAnimacion()">
-                <span class="x-icon"></span>
-            </button>
-            
-            <!-- VISTA 1: INPUT -->
-            <div id="view-input" class="view-section">
+            <!-- VENTANA 1: INPUT DE CÓDIGO -->
+            <div class="glass-card" id="window-input"> 
+                <button class="close-btn" onclick="closeWindow('window-input')"><span class="x-icon"></span></button>
                 <h2 style="font-size: 26px; margin-bottom: 5px; font-weight: 700; letter-spacing: -0.5px;">Buscar Galería</h2>
                 <p style="font-size: 15px; opacity: 0.7; font-weight: 400;">Ingresa el código proporcionado</p>
                 <input type="text" id="codigoInput" class="input-code" placeholder="Ej. BODA2026" autocomplete="off">
                 <button class="btn btn-primary" onclick="buscarCodigo()">Buscar código</button>
             </div>
 
-            <!-- VISTA 2: ESTADOS (Carga, Éxito, Error) -->
-            <div id="view-status" class="view-section view-hidden" style="display: none;">
+            <!-- VENTANA 2: ESTADO (CARGANDO / ERROR / ÉXITO) -->
+            <div class="glass-card" id="window-status" style="position: absolute;">
+                <!-- Esta ventana tiene su propia X en caso de error -->
+                <button class="close-btn" id="closeStatusBtn" style="display: none;" onclick="closeWindow('window-status')"><span class="x-icon"></span></button>
+                
                 <div class="loader-container">
                     <div id="spinner" class="spinner"></div>
                     
-                    <!-- CSS ERROR ANIMADO -->
-                    <div id="error-icon" class="animated-css-error">
-                        <div class="error-leg error-left"></div>
-                        <div class="error-leg error-right"></div>
-                    </div>
+                    <!-- SVG ERROR PERFECTO -->
+                    <svg class="icon-svg error-svg" id="error-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <path class="error-path path-1" fill="none" d="M16,16 l18,18" />
+                        <path class="error-path path-2" fill="none" d="M34,16 l-18,18" />
+                    </svg>
 
-                    <!-- CSS CHECK ANIMADO -->
-                    <div id="success-icon" class="animated-css-check">
-                        <div class="check-leg check-short"></div>
-                        <div class="check-leg check-long"></div>
-                    </div>
+                    <!-- SVG CHECK PERFECTO (CON ÁNGULO REDONDEADO) -->
+                    <svg class="icon-svg success-svg" id="success-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <path class="success-path" fill="none" d="M14,26 l7,7 l15,-15" />
+                    </svg>
 
                     <p id="status-text" class="status-msg">Buscando código en la nube...</p>
                     <button id="btn-retry" class="btn btn-primary" style="display: none; margin-top: 15px;" onclick="reintentarBusqueda()">Reintentar</button>
@@ -323,96 +259,112 @@ v14
 
     <script>
         const modal = document.getElementById('modal');
-        const viewInput = document.getElementById('view-input');
-        const viewStatus = document.getElementById('view-status');
+        const winInput = document.getElementById('window-input');
+        const winStatus = document.getElementById('window-status');
+        
         const codigoInput = document.getElementById('codigoInput');
         const spinner = document.getElementById('spinner');
         const errorIcon = document.getElementById('error-icon');
         const successIcon = document.getElementById('success-icon');
         const statusText = document.getElementById('status-text');
         const btnRetry = document.getElementById('btn-retry');
-        const closeBtn = document.getElementById('closeBtn');
+        const closeStatusBtn = document.getElementById('closeStatusBtn');
 
+        // ABRE LA VENTANA 1
         function openModal() {
             modal.classList.add('active');
-            resetModalDirecto();
+            
+            // Asegurar que la ventana de status esté oculta
+            winStatus.style.display = 'none';
+            winStatus.classList.remove('window-enter', 'window-exit');
+            
+            // Mostrar ventana de input con animación
+            winInput.style.display = 'block';
+            winInput.classList.remove('window-exit');
+            winInput.classList.add('window-enter');
+            
+            codigoInput.value = '';
             setTimeout(() => codigoInput.focus(), 300);
         }
 
-        function closeModalConAnimacion() {
-            closeBtn.classList.add('is-clicked');
+        // CIERRA CUALQUIER VENTANA CON LA X
+        function closeWindow(windowId) {
+            const win = document.getElementById(windowId);
+            const btnX = win.querySelector('.close-btn');
+            
+            btnX.classList.add('is-clicked');
+            
             setTimeout(() => {
-                modal.classList.remove('active');
+                win.classList.remove('window-enter');
+                win.classList.add('window-exit'); // Animación de encoger
+                
                 setTimeout(() => {
-                    closeBtn.classList.remove('is-clicked');
-                    resetModalDirecto(); // Limpia por detrás para la próxima
-                }, 500); 
-            }, 350); 
+                    modal.classList.remove('active');
+                    btnX.classList.remove('is-clicked');
+                    win.style.display = 'none';
+                }, 400); // Espera a que termine la animación de salida
+            }, 300);
         }
 
-        // Motor de Transición Fluida
-        function switchView(hideEl, showEl, displayStyle = 'block') {
-            hideEl.classList.add('view-hidden');
+        // TRANSICIÓN FÍSICA DE VENTANAS (A -> B)
+        function swapWindows(winOut, winIn) {
+            winOut.classList.remove('window-enter');
+            winOut.classList.add('window-exit');
+            
             setTimeout(() => {
-                hideEl.style.display = 'none';
-                showEl.style.display = displayStyle;
-                showEl.classList.add('view-hidden');
+                winOut.style.display = 'none';
                 
-                // Forzar repintado del navegador para que ejecute la animación
-                void showEl.offsetWidth; 
-                
-                showEl.classList.remove('view-hidden');
-            }, 300); // 300ms = tiempo de la transición CSS
+                winIn.style.display = 'block';
+                winIn.classList.remove('window-exit');
+                // Forzar repintado
+                void winIn.offsetWidth;
+                winIn.classList.add('window-enter');
+            }, 350); // Tiempo que tarda en desaparecer la primera ventana
         }
 
-        // Reseteo al reintentar (con animación)
+        // REINTENTAR (DE STATUS A INPUT)
         function reintentarBusqueda() {
-            switchView(viewStatus, viewInput);
+            swapWindows(winStatus, winInput);
             setTimeout(() => {
-                resetEstadosVisibles();
                 codigoInput.value = '';
                 codigoInput.focus();
-            }, 350);
+            }, 400);
         }
 
-        // Reseteo rápido sin animación (cuando se abre/cierra la ventana)
-        function resetModalDirecto() {
-            viewInput.style.display = 'block';
-            viewInput.classList.remove('view-hidden');
-            viewStatus.style.display = 'none';
-            codigoInput.value = '';
-            resetEstadosVisibles();
-        }
-
-        function resetEstadosVisibles() {
+        function resetStatusContent() {
             spinner.style.display = 'block';
             
             errorIcon.style.display = 'none';
-            errorIcon.classList.remove('show-error');
+            errorIcon.classList.remove('show-icon');
             
             successIcon.style.display = 'none';
-            successIcon.classList.remove('show-success');
+            successIcon.classList.remove('show-icon');
             
             statusText.style.color = ''; 
             statusText.style.textShadow = '';
-            statusText.style.fontWeight = '400';
+            statusText.style.fontWeight = '500';
 
             btnRetry.style.display = 'none';
+            closeStatusBtn.style.display = 'none';
             statusText.innerText = 'Buscando código en la nube...';
         }
 
         function mostrarError(mensaje) {
             spinner.style.display = 'none';
+            
             errorIcon.style.display = 'block';
-            setTimeout(() => errorIcon.classList.add('show-error'), 10);
+            setTimeout(() => errorIcon.classList.add('show-icon'), 10);
+            
             statusText.innerText = mensaje;
             btnRetry.style.display = 'block';
+            closeStatusBtn.style.display = 'flex'; // Mostramos la X de la ventana de estado
         }
 
         function mostrarExito(mensaje) {
             spinner.style.display = 'none';
+            
             successIcon.style.display = 'block';
-            setTimeout(() => successIcon.classList.add('show-success'), 10);
+            setTimeout(() => successIcon.classList.add('show-icon'), 10);
             
             statusText.innerText = mensaje;
             statusText.style.color = 'var(--exito)';
@@ -424,16 +376,17 @@ v14
             const codigo = codigoInput.value.trim().toUpperCase();
             
             if(codigo === '') {
-                codigoInput.style.transform = 'translateX(-10px)';
-                setTimeout(() => codigoInput.style.transform = 'translateX(10px)', 100);
-                setTimeout(() => codigoInput.style.transform = 'translateX(0)', 200);
+                winInput.style.transform = 'translateX(-10px)';
+                setTimeout(() => winInput.style.transform = 'translateX(10px)', 100);
+                setTimeout(() => winInput.style.transform = 'scale(1) translateY(0)', 200);
                 return;
             }
 
             codigoInput.blur(); 
+            resetStatusContent();
             
-            // Ejecutamos la transición fluida hacia el loader
-            switchView(viewInput, viewStatus);
+            // Ejecutamos el intercambio físico de ventanas
+            swapWindows(winInput, winStatus);
 
             fetch('codigos.json')
                 .then(response => {
@@ -448,11 +401,11 @@ v14
                         } else {
                             mostrarError('No se encontró el código de evento.');
                         }
-                    }, 2000); 
+                    }, 2400); // 2.4s totales (incluye el tiempo que tarda la ventana en girar)
                 })
                 .catch(error => {
                     console.error('Error al cargar codigos.json:', error);
-                    setTimeout(() => mostrarError('Error de red. Revisa tu conexión.'), 1800);
+                    setTimeout(() => mostrarError('Error de red. Revisa tu conexión.'), 2000);
                 });
         }
 
